@@ -60,6 +60,9 @@ fig <- Fig$new()
 fig$set("foo", 1)
 fig$get("foo")
 
+fig$set("bar", list(baz = 2))
+fig$get("bar.baz")
+
 ## ------------------------------------------------
 ## Method `Fig$set`
 ## ------------------------------------------------
@@ -173,6 +176,9 @@ in the precedence.
 \preformatted{fig <- Fig$new()
 fig$set("foo", 1)
 fig$get("foo")
+
+fig$set("bar", list(baz = 2))
+fig$get("bar.baz")
 }
 \if{html}{\out{</div>}}
 
