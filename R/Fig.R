@@ -18,8 +18,17 @@ Fig <- R6::R6Class(
     },
 
     #' @description Get a stored value
+    #' @details This function returns values based on a following priority
+    #' (highest to lowest). If value is not found, then it looks up next level
+    #' in the precedence.
+    #' 1. System environment variable (case sensitive)
+    #' 1. Value manually set
     #' @param key A key value to retrieve stored value for.
     get = function(key) {
+      value <- Sys.getenv(key, NA)
+      if (!is.na(value)) {
+        return(value)
+      }
       private$items[[key]]
     },
 
