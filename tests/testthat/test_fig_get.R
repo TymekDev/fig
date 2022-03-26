@@ -1,3 +1,10 @@
+test_that("get validates key", {
+  fig <- Fig$new()
+  expect_error(fig$get(c("a", "b")))
+  expect_error(fig$get(list(1, 2)))
+  expect_silent(fig$get("foo"))
+})
+
 test_that("get precedence works", {
   fig <- Fig$new("prefix_")
 

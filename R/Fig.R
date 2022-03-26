@@ -51,6 +51,7 @@ Fig <- R6::R6Class( # nolint
     #' fig$set("bar", list(baz = 2))
     #' fig$get("bar.baz")
     get = function(key) {
+      stopifnot(length(key) == 1)
       value <- Sys.getenv(private$add_env_prefix(key), NA)
       if (!is.na(value)) {
         return(value)
