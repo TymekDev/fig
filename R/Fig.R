@@ -5,7 +5,7 @@
 #'
 #' Fig provides a set of exported functions. This makes `Fig` class instance
 #' creation optional, and makes the package mimic being a class instance. Those
-#' functions are simple wrappers on an internal fig object and are prefixed to
+#' functions are simple wrappers on an internal `Fig` object and are prefixed to
 #' avoid masking.
 #'
 #' @export
@@ -28,9 +28,9 @@ Fig <- R6::R6Class( # nolint
     #' @examples
     #' fig <- Fig$new()
     #' fig$set("foo", 1)
-    #' fig$get("foo") # 1
+    #' fig$get("foo") # == 1
     #' fig$delete("foo")
-    #' fig$get("foo") # NULL
+    #' fig$get("foo") # == NULL
     delete = function(key) {
       rm(list = key, envir = private$items)
       invisible(self)
@@ -42,7 +42,7 @@ Fig <- R6::R6Class( # nolint
     #' in the precedence.
     #' 1. System environment variable (case sensitive)
     #' 1. Value manually set
-    #' @param key A key to retrieve its corresponding value
+    #' @param key A key to retrieve its corresponding value.
     #' @examples
     #' fig <- Fig$new()
     #' fig$set("foo", 1)
@@ -109,7 +109,7 @@ Fig <- R6::R6Class( # nolint
 #' @export
 fig_delete <- function(key) global_fig()$delete(key)
 
-#' @param key A key to retrieve its corresponding value
+#' @param key A key to retrieve its corresponding value.
 #' @rdname Fig
 #' @export
 fig_get <- function(key) global_fig()$get(key)
