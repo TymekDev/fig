@@ -9,7 +9,7 @@
 #' avoid masking.
 #'
 #' @export
-Fig <- R6::R6Class(
+Fig <- R6::R6Class( # nolint
   classname = "Fig",
   public = list(
     #' @description Create a new Fig instance
