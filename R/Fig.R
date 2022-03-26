@@ -21,6 +21,7 @@ Fig <- R6::R6Class(
     #' @param key A key to delete its corresponding value.
     delete = function(key) {
       rm(list = key, envir = private$items)
+      invisible(self)
     },
 
     #' @description Get a value
@@ -50,6 +51,11 @@ Fig <- R6::R6Class(
     items = NULL
   )
 )
+
+#' @param key A key to delete its corresponding value.
+#' @rdname Fig
+#' @export
+fig_delete <- function(key) global_fig()$delete(key)
 
 #' @param key A key to retrieve its corresponding value
 #' @rdname Fig
