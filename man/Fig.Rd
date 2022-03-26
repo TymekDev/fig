@@ -10,7 +10,7 @@
 \usage{
 fig_delete(key)
 
-fig_get(key)
+fig_get(key, split = getOption("fig.split", TRUE))
 
 fig_set(key, value)
 
@@ -18,6 +18,9 @@ fig_update_env_prefix(env_prefix)
 }
 \arguments{
 \item{key}{A key to store a value for.}
+
+\item{split}{A logical determining whether dots in \code{key} are treated
+specially or as is. See Details section.}
 
 \item{value}{A value to be stored.}
 
@@ -177,10 +180,12 @@ in the precedence.
 \item Value manually set
 }
 
+For system environment lookup dots are replaced by underscores, e.g.
+\code{fig$get("foo.bar")} will look up \strong{foo_bar}.
+
 Additionally, Fig treats dots in \code{key} as nest level delimiters.
 Therefore, \code{fig$get("foo.bar")} is equivalent to \code{fig$get("foo")$bar}.
-This behavior can be disabled by setting \code{options(fig.split = FALSE)} or
-by providing \code{split} argument.
+This behavior can be disabled either by setting \code{options(fig.split = FALSE)} or by providing \code{split = FALSE} argument.
 }
 
 \subsection{Examples}{
