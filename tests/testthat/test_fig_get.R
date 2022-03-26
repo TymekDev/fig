@@ -24,3 +24,19 @@ test_that("get works with YAML key notation", {
   expect_equal(fig$get("foo.bar"), list(baz = 2))
   expect_equal(fig$get("foo.bar.baz"), 2)
 })
+
+test_that("get split argument works", {
+  fig <- Fig$new()
+  fig$set("foo", list(bar = 1))
+  fig$set("foo.bar", 2)
+  expect_equal(fig$get("foo.bar"), 1)
+  expect_equal(fig$get("foo.bar", FALSE), 2)
+})
+
+test_that("fig.split option works", {
+  fig <- Fig$new()
+  fig$set("foo", list(bar = 1))
+  fig$set("foo.bar", 2)
+  expect_equal(fig$get("foo.bar"), 1)
+  with_options(list(fig.split = FALSE), expect_equal(fig$get("foo.bar"), 2))
+})
