@@ -1,0 +1,15 @@
+Package: fig
+Title: A config package without a con
+Version: 0.0.1
+Authors@R:
+  c(
+    person("Tymoteusz", "Makowski", role = c("cre", "aut"), email = "t@makowski.sh")
+  )
+Description: TODO
+URL: https://github.com/tmakowski/fig
+BugReports: https://github.com/tmakowski/fig/issues
+License: MIT
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
+Imports: R6
