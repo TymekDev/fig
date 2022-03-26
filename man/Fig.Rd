@@ -59,6 +59,16 @@ Get a stored value
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Details}{
+This function returns values based on a following priority
+(highest to lowest). If value is not found, then it looks up next level
+in the precedence.
+\enumerate{
+\item System environment variable (case sensitive)
+\item Value manually set
+}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-set"></a>}}
