@@ -3,3 +3,4 @@
 export(Fig)
 export(fig_get)
 export(fig_set)
+export(purge)

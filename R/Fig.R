@@ -36,15 +36,13 @@ Fig <- R6::R6Class(
   )
 )
 
-fig <- Fig$new()
-
 #' @param key A key value to retrieve stored value for.
 #' @rdname Fig
 #' @export
-fig_get <- function(key) fig$get(key)
+fig_get <- function(key) global_fig()$get(key)
 
 #' @param key A key value to store a value for.
 #' @param value A value to be stored.
 #' @rdname Fig
 #' @export
-fig_set <- function(key, value) fig$set(key, value)
+fig_set <- function(key, value) global_fig()$set(key, value)
