@@ -86,6 +86,25 @@ Fig <- R6::R6Class( # nolint
       invisible(self)
     },
 
+    #' @description Set any number of values at once
+    #' @param ... Named values Names are used as keys for provided values.
+    #' @examples
+    #' fig <- Fig$new()
+    #' fig$set_many("foo" = 1, "bar" = 2)
+    set_many = function(...) {
+      args <- list(...)
+      keys <- names(args)
+      stopifnot(
+        !is.null(keys),
+        all(keys != ""),
+        length(unique(keys)) == length(keys)
+      )
+      for (key in keys) {
+        self$set(key, args[[key]])
+      }
+      invisible(self)
+    },
+
     #' @description Update prefix for system environment variables
     #' @param env_prefix (character) A prefix to be prepended to a key before
     #' system environment lookup.
@@ -141,6 +160,14 @@ fig_get <- function(key, split = getOption("fig.split", TRUE)) {
 #' @export
 fig_set <- function(key, value) {
   global_fig()$set(key, value)
+}
+
+#' @description Set any number of values at once
+#' @param ... Named values Names are used as keys for provided values.
+#' @rdname Fig
+#' @export
+fig_set_many <- function(...) {
+  global_fig()$set_many(...)
 }
 
 #' @param env_prefix (character) A prefix to be prepended to a key before system
