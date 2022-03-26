@@ -33,6 +33,48 @@ creation optional, and makes the package mimic being a class instance. Those
 functions are simple wrappers on an internal fig object and are prefixed to
 avoid masking.
 }
+\examples{
+
+## ------------------------------------------------
+## Method `Fig$new`
+## ------------------------------------------------
+
+fig <- Fig$new()
+fig <- Fig$new("RCONNECT_")
+
+## ------------------------------------------------
+## Method `Fig$delete`
+## ------------------------------------------------
+
+fig <- Fig$new()
+fig$set("foo", 1)
+fig$get("foo") # 1
+fig$delete("foo")
+fig$get("foo") # NULL
+
+## ------------------------------------------------
+## Method `Fig$get`
+## ------------------------------------------------
+
+fig <- Fig$new()
+fig$set("foo", 1)
+fig$get("foo")
+
+## ------------------------------------------------
+## Method `Fig$set`
+## ------------------------------------------------
+
+fig <- Fig$new()
+fig$set("foo", 1)
+fig$set("bar", 123)$set("baz", list(1, 2, 3))
+
+## ------------------------------------------------
+## Method `Fig$update_env_prefix`
+## ------------------------------------------------
+
+fig <- Fig$new()
+fig$update_env_prefix("RCONNECT_")
+}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
@@ -61,6 +103,15 @@ system environment lookup.}
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{fig <- Fig$new()
+fig <- Fig$new("RCONNECT_")
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-delete"></a>}}
@@ -78,6 +129,18 @@ Delete a stored value
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{fig <- Fig$new()
+fig$set("foo", 1)
+fig$get("foo") # 1
+fig$delete("foo")
+fig$get("foo") # NULL
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get"></a>}}
@@ -105,6 +168,16 @@ in the precedence.
 }
 }
 
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{fig <- Fig$new()
+fig$set("foo", 1)
+fig$get("foo")
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-set"></a>}}
@@ -124,6 +197,16 @@ Store a value
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{fig <- Fig$new()
+fig$set("foo", 1)
+fig$set("bar", 123)$set("baz", list(1, 2, 3))
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-update_env_prefix"></a>}}
@@ -142,6 +225,15 @@ system environment lookup.}
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{fig <- Fig$new()
+fig$update_env_prefix("RCONNECT_")
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}

@@ -15,6 +15,9 @@ Fig <- R6::R6Class( # nolint
     #' @description Create a new Fig instance
     #' @param env_prefix (character) A prefix to be prepended to a key before
     #' system environment lookup.
+    #' @examples
+    #' fig <- Fig$new()
+    #' fig <- Fig$new("RCONNECT_")
     initialize = function(env_prefix = "") {
       self$update_env_prefix(env_prefix)
       private$items <- new.env()
@@ -22,6 +25,12 @@ Fig <- R6::R6Class( # nolint
 
     #' @description Delete a stored value
     #' @param key A key to delete its corresponding value.
+    #' @examples
+    #' fig <- Fig$new()
+    #' fig$set("foo", 1)
+    #' fig$get("foo") # 1
+    #' fig$delete("foo")
+    #' fig$get("foo") # NULL
     delete = function(key) {
       rm(list = key, envir = private$items)
       invisible(self)
@@ -34,6 +43,10 @@ Fig <- R6::R6Class( # nolint
     #' 1. System environment variable (case sensitive)
     #' 1. Value manually set
     #' @param key A key to retrieve its corresponding value
+    #' @examples
+    #' fig <- Fig$new()
+    #' fig$set("foo", 1)
+    #' fig$get("foo")
     get = function(key) {
       value <- Sys.getenv(private$add_env_prefix(key), NA)
       if (!is.na(value)) {
@@ -45,6 +58,10 @@ Fig <- R6::R6Class( # nolint
     #' @description Store a value
     #' @param key A key to store a value for.
     #' @param value A value to be stored.
+    #' @examples
+    #' fig <- Fig$new()
+    #' fig$set("foo", 1)
+    #' fig$set("bar", 123)$set("baz", list(1, 2, 3))
     set = function(key, value) {
       private$items[[key]] <- value
       invisible(self)
@@ -53,6 +70,9 @@ Fig <- R6::R6Class( # nolint
     #' @description Update prefix for system environment variables
     #' @param env_prefix (character) A prefix to be prepended to a key before
     #' system environment lookup.
+    #' @examples
+    #' fig <- Fig$new()
+    #' fig$update_env_prefix("RCONNECT_")
     update_env_prefix = function(env_prefix) {
       stopifnot(
         is.character(env_prefix),
