@@ -17,13 +17,19 @@ Fig <- R6::R6Class(
       private$items <- new.env()
     },
 
-    #' @description Get a stored value
+    #' @description Delete a stored value
+    #' @param key A key to delete its corresponding value.
+    delete = function(key) {
+      rm(list = key, envir = private$items)
+    },
+
+    #' @description Get a value
     #' @details This function returns values based on a following priority
     #' (highest to lowest). If value is not found, then it looks up next level
     #' in the precedence.
     #' 1. System environment variable (case sensitive)
     #' 1. Value manually set
-    #' @param key A key value to retrieve stored value for.
+    #' @param key A key to retrieve its corresponding value
     get = function(key) {
       value <- Sys.getenv(key, NA)
       if (!is.na(value)) {
@@ -33,7 +39,7 @@ Fig <- R6::R6Class(
     },
 
     #' @description Store a value
-    #' @param key A key value to store a value for.
+    #' @param key A key to store a value for.
     #' @param value A value to be stored.
     set = function(key, value) {
       private$items[[key]] <- value
@@ -45,12 +51,12 @@ Fig <- R6::R6Class(
   )
 )
 
-#' @param key A key value to retrieve stored value for.
+#' @param key A key to retrieve its corresponding value
 #' @rdname Fig
 #' @export
 fig_get <- function(key) global_fig()$get(key)
 
-#' @param key A key value to store a value for.
+#' @param key A key to store a value for.
 #' @param value A value to be stored.
 #' @rdname Fig
 #' @export
