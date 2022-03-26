@@ -11,7 +11,7 @@ fig_get(key)
 fig_set(key, value)
 }
 \arguments{
-\item{key}{A key value to store a value for.}
+\item{key}{A key to store a value for.}
 
 \item{value}{A value to be stored.}
 }
@@ -28,6 +28,7 @@ avoid masking.
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{Fig$new()}}
+\item \href{#method-delete}{\code{Fig$delete()}}
 \item \href{#method-get}{\code{Fig$get()}}
 \item \href{#method-set}{\code{Fig$set()}}
 \item \href{#method-clone}{\code{Fig$clone()}}
@@ -44,10 +45,27 @@ Create a new Fig instance
 
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-delete"></a>}}
+\if{latex}{\out{\hypertarget{method-delete}{}}}
+\subsection{Method \code{delete()}}{
+Delete a stored value
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Fig$delete(key)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{key}}{A key to delete its corresponding value.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get"></a>}}
 \if{latex}{\out{\hypertarget{method-get}{}}}
 \subsection{Method \code{get()}}{
-Get a stored value
+Get a value
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Fig$get(key)}\if{html}{\out{</div>}}
 }
@@ -55,7 +73,7 @@ Get a stored value
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{key}}{A key value to retrieve stored value for.}
+\item{\code{key}}{A key to retrieve its corresponding value}
 }
 \if{html}{\out{</div>}}
 }
@@ -82,7 +100,7 @@ Store a value
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{key}}{A key value to store a value for.}
+\item{\code{key}}{A key to store a value for.}
 
 \item{\code{value}}{A value to be stored.}
 }
