@@ -118,23 +118,31 @@ Fig <- R6::R6Class( # nolint
 #' @param key A key to delete its corresponding value.
 #' @rdname Fig
 #' @export
-fig_delete <- function(key) global_fig()$delete(key)
+fig_delete <- function(key) {
+  global_fig()$delete(key)
+}
 
 #' @param key A key to retrieve its corresponding value.
 #' @param split A logical determining whether dots in `key` are treated
 #' specially or as is. See Details section.
 #' @rdname Fig
 #' @export
-fig_get <- function(key, split = getOption("fig.split", TRUE)) global_fig()$get(key)
+fig_get <- function(key, split = getOption("fig.split", TRUE)) {
+  global_fig()$get(key)
+}
 
 #' @param key A key to store a value for.
 #' @param value A value to be stored.
 #' @rdname Fig
 #' @export
-fig_set <- function(key, value) global_fig()$set(key, value)
+fig_set <- function(key, value) {
+  global_fig()$set(key, value)
+}
 
 #' @param env_prefix (character) A prefix to be prepended to a key before system
 #' environment lookup.
 #' @rdname Fig
 #' @export
-fig_update_env_prefix <- function(env_prefix) global_fig()$update_env_prefix(env_prefix)
+fig_update_env_prefix <- function(env_prefix) {
+  global_fig()$update_env_prefix(env_prefix)
+}
