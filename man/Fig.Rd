@@ -5,6 +5,7 @@
 \alias{fig_delete}
 \alias{fig_get}
 \alias{fig_set}
+\alias{fig_update_env_prefix}
 \title{Create a Fig to Store Config}
 \usage{
 fig_delete(key)
@@ -12,11 +13,16 @@ fig_delete(key)
 fig_get(key)
 
 fig_set(key, value)
+
+fig_update_env_prefix(env_prefix)
 }
 \arguments{
 \item{key}{A key to store a value for.}
 
 \item{value}{A value to be stored.}
+
+\item{env_prefix}{(character) A prefix to be prepended to a key before system
+environment lookup.}
 }
 \description{
 \code{Fig} class is a main driver of this package. For usage details
@@ -34,6 +40,7 @@ avoid masking.
 \item \href{#method-delete}{\code{Fig$delete()}}
 \item \href{#method-get}{\code{Fig$get()}}
 \item \href{#method-set}{\code{Fig$set()}}
+\item \href{#method-update_env_prefix}{\code{Fig$update_env_prefix()}}
 \item \href{#method-clone}{\code{Fig$clone()}}
 }
 }
@@ -43,9 +50,17 @@ avoid masking.
 \subsection{Method \code{new()}}{
 Create a new Fig instance
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Fig$new()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Fig$new(env_prefix = "")}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{env_prefix}}{(character) A prefix to be prepended to a key before
+system environment lookup.}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-delete"></a>}}
@@ -106,6 +121,24 @@ Store a value
 \item{\code{key}}{A key to store a value for.}
 
 \item{\code{value}}{A value to be stored.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-update_env_prefix"></a>}}
+\if{latex}{\out{\hypertarget{method-update_env_prefix}{}}}
+\subsection{Method \code{update_env_prefix()}}{
+Update prefix for system environment variables
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Fig$update_env_prefix(env_prefix)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{env_prefix}}{(character) A prefix to be prepended to a key before
+system environment lookup.}
 }
 \if{html}{\out{</div>}}
 }

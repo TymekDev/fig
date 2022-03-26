@@ -13,7 +13,10 @@ Fig <- R6::R6Class( # nolint
   classname = "Fig",
   public = list(
     #' @description Create a new Fig instance
-    initialize = function() {
+    #' @param env_prefix (character) A prefix to be prepended to a key before
+    #' system environment lookup.
+    initialize = function(env_prefix = "") {
+      self$update_env_prefix(env_prefix)
       private$items <- new.env()
     },
 
@@ -32,7 +35,7 @@ Fig <- R6::R6Class( # nolint
     #' 1. Value manually set
     #' @param key A key to retrieve its corresponding value
     get = function(key) {
-      value <- Sys.getenv(key, NA)
+      value <- Sys.getenv(private$add_env_prefix(key), NA)
       if (!is.na(value)) {
         return(value)
       }
@@ -45,9 +48,27 @@ Fig <- R6::R6Class( # nolint
     set = function(key, value) {
       private$items[[key]] <- value
       invisible(self)
+    },
+
+    #' @description Update prefix for system environment variables
+    #' @param env_prefix (character) A prefix to be prepended to a key before
+    #' system environment lookup.
+    update_env_prefix = function(env_prefix) {
+      stopifnot(
+        is.character(env_prefix),
+        !is.na(env_prefix),
+        length(env_prefix) == 1
+      )
+      private$add_env_prefix <- if (nchar(env_prefix) > 0) {
+        function(key) paste0(env_prefix, key)
+      } else {
+        identity
+      }
+      invisible(self)
     }
   ),
   private = list(
+    add_env_prefix = NULL,
     items = NULL
   )
 )
@@ -67,3 +88,9 @@ fig_get <- function(key) global_fig()$get(key)
 #' @rdname Fig
 #' @export
 fig_set <- function(key, value) global_fig()$set(key, value)
+
+#' @param env_prefix (character) A prefix to be prepended to a key before system
+#' environment lookup.
+#' @rdname Fig
+#' @export
+fig_update_env_prefix <- function(env_prefix) global_fig()$update_env_prefix(env_prefix)

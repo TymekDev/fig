@@ -1,3 +1,7 @@
+# initialize works
+expect_silent(Fig$new("a"))
+expect_error(Fig$new(c("a", "b")))
+
 fig <- Fig$new()
 
 # set returns reference to original object
@@ -18,4 +22,17 @@ expect_equal(fig$get("b"), NULL)
 if (requireNamespace("withr", quietly = TRUE)) {
   withr::with_envvar(list(a = 2), expect_equal(fig$get("a"), "2"))
   withr::with_envvar(list(asdf = 2), expect_equal(fig$get("a"), 1))
+}
+
+# update_env_prefix and env_prefix work
+expect_error(fig$update_env_prefix(c("a", "b")))
+expect_error(fig$update_env_prefix(NA_character_))
+expect_error(fig$update_env_prefix(1))
+expect_error(fig$update_env_prefix(list()))
+expect_identical(fig$update_env_prefix("foo_"), fig)
+if (requireNamespace("withr", quietly = TRUE)) {
+  expect_equal(fig$get("a"), 1)
+  withr::with_envvar(list(foo_a = 2), expect_equal(fig$get("a"), "2"))
+  fig$update_env_prefix("bar_")
+  withr::with_envvar(list(bar_a = 2), expect_equal(fig$get("a"), "2"))
 }

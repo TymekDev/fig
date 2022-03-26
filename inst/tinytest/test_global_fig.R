@@ -13,3 +13,11 @@ expect_false(identical(fig:::global_fig(), old_fig))
 fig_set("a", 1)
 expect_identical(fig_delete("a"), fig:::global_fig())
 expect_equal(fig_get("a"), NULL)
+
+# fig_update_env_prefix works
+if (requireNamespace("withr", quietly = TRUE)) {
+  expect_silent(fig_update_env_prefix("xyz_"))
+  withr::with_envvar(list(xyz_a = 2), expect_equal(fig_get("a"), "2"))
+  fig_set("a", 1)
+  withr::with_envvar(list(xyz_a = 2), expect_equal(fig_get("a"), "2"))
+}
