@@ -42,7 +42,14 @@ Fig <- R6::R6Class( # nolint
     #' in the precedence.
     #' 1. System environment variable (case sensitive)
     #' 1. Value manually set
+    #'
+    #' Additionally, Fig treats dots in `key` as nest level delimiters.
+    #' Therefore, `fig$get("foo.bar")` is equivalent to `fig$get("foo")$bar`.
+    #' This behavior can be disabled by setting `options(fig.split = FALSE)` or
+    #' by providing `split` argument.
     #' @param key A key to retrieve its corresponding value.
+    #' @param split A logical determining whether dots in `key` are treated
+    #' specially or as is. See Details section.
     #' @examples
     #' fig <- Fig$new()
     #' fig$set("foo", 1)
@@ -50,13 +57,17 @@ Fig <- R6::R6Class( # nolint
     #'
     #' fig$set("bar", list(baz = 2))
     #' fig$get("bar.baz")
-    get = function(key) {
+    #'
+    #' fig$set("bar.baz", 3)
+    #' fig$get("bar.baz") # == 2
+    #' fig$get("bar.baz", split = FALSE) # == 3
+    get = function(key, split = getOption("fig.split", TRUE)) {
       stopifnot(length(key) == 1)
       value <- Sys.getenv(private$add_env_prefix(key), NA)
       if (!is.na(value)) {
         return(value)
       }
-      private$traverse_items(key)
+      if (isTRUE(split)) private$traverse_items(key) else private$items[[key]]
     },
 
     #' @description Store a value
@@ -110,9 +121,11 @@ Fig <- R6::R6Class( # nolint
 fig_delete <- function(key) global_fig()$delete(key)
 
 #' @param key A key to retrieve its corresponding value.
+#' @param split A logical determining whether dots in `key` are treated
+#' specially or as is. See Details section.
 #' @rdname Fig
 #' @export
-fig_get <- function(key) global_fig()$get(key)
+fig_get <- function(key, split = getOption("fig.split", TRUE)) global_fig()$get(key)
 
 #' @param key A key to store a value for.
 #' @param value A value to be stored.

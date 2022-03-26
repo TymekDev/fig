@@ -63,6 +63,10 @@ fig$get("foo")
 fig$set("bar", list(baz = 2))
 fig$get("bar.baz")
 
+fig$set("bar.baz", 3)
+fig$get("bar.baz") # == 2
+fig$get("bar.baz", split = FALSE) # == 3
+
 ## ------------------------------------------------
 ## Method `Fig$set`
 ## ------------------------------------------------
@@ -151,13 +155,16 @@ fig$get("foo") # == NULL
 \subsection{Method \code{get()}}{
 Get a value
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Fig$get(key)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Fig$get(key, split = getOption("fig.split", TRUE))}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{key}}{A key to retrieve its corresponding value.}
+
+\item{\code{split}}{A logical determining whether dots in \code{key} are treated
+specially or as is. See Details section.}
 }
 \if{html}{\out{</div>}}
 }
@@ -169,6 +176,11 @@ in the precedence.
 \item System environment variable (case sensitive)
 \item Value manually set
 }
+
+Additionally, Fig treats dots in \code{key} as nest level delimiters.
+Therefore, \code{fig$get("foo.bar")} is equivalent to \code{fig$get("foo")$bar}.
+This behavior can be disabled by setting \code{options(fig.split = FALSE)} or
+by providing \code{split} argument.
 }
 
 \subsection{Examples}{
@@ -179,6 +191,10 @@ fig$get("foo")
 
 fig$set("bar", list(baz = 2))
 fig$get("bar.baz")
+
+fig$set("bar.baz", 3)
+fig$get("bar.baz") # == 2
+fig$get("bar.baz", split = FALSE) # == 3
 }
 \if{html}{\out{</div>}}
 
