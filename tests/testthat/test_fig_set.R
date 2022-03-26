@@ -29,4 +29,6 @@ test_that("fig_set works", {
   l <- list()
   fig_set("foo", l)
   expect_identical(fig_get("foo"), l)
+
+  purge()
 })

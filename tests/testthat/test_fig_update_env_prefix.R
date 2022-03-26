@@ -22,4 +22,5 @@ test_that("fig_update_env_prefix works", {
   fig_update_env_prefix("foo_")
   with_envvar(list(foo_bar = "a"), expect_equal(fig_get("bar"), "a"))
   expect_equal(fig_get("bar"), NULL)
+  purge()
 })
