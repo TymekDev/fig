@@ -30,7 +30,7 @@ refer to \code{Fig} methods documentation.
 
 Fig provides a set of exported functions. This makes \code{Fig} class instance
 creation optional, and makes the package mimic being a class instance. Those
-functions are simple wrappers on an internal fig object and are prefixed to
+functions are simple wrappers on an internal \code{Fig} object and are prefixed to
 avoid masking.
 }
 \examples{
@@ -48,9 +48,9 @@ fig <- Fig$new("RCONNECT_")
 
 fig <- Fig$new()
 fig$set("foo", 1)
-fig$get("foo") # 1
+fig$get("foo") # == 1
 fig$delete("foo")
-fig$get("foo") # NULL
+fig$get("foo") # == NULL
 
 ## ------------------------------------------------
 ## Method `Fig$get`
@@ -136,9 +136,9 @@ Delete a stored value
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{fig <- Fig$new()
 fig$set("foo", 1)
-fig$get("foo") # 1
+fig$get("foo") # == 1
 fig$delete("foo")
-fig$get("foo") # NULL
+fig$get("foo") # == NULL
 }
 \if{html}{\out{</div>}}
 
@@ -157,7 +157,7 @@ Get a value
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{key}}{A key to retrieve its corresponding value}
+\item{\code{key}}{A key to retrieve its corresponding value.}
 }
 \if{html}{\out{</div>}}
 }
