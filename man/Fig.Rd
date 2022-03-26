@@ -5,6 +5,7 @@
 \alias{fig_delete}
 \alias{fig_get}
 \alias{fig_set}
+\alias{fig_set_many}
 \alias{fig_update_env_prefix}
 \title{Create a Fig to Store Config}
 \usage{
@@ -13,6 +14,8 @@ fig_delete(key)
 fig_get(key, split = getOption("fig.split", TRUE))
 
 fig_set(key, value)
+
+fig_set_many(...)
 
 fig_update_env_prefix(env_prefix)
 }
@@ -23,6 +26,8 @@ fig_update_env_prefix(env_prefix)
 specially or as is. See Details section.}
 
 \item{value}{A value to be stored.}
+
+\item{...}{Named values Names are used as keys for provided values.}
 
 \item{env_prefix}{(character) A prefix to be prepended to a key before system
 environment lookup.}
@@ -35,6 +40,8 @@ Fig provides a set of exported functions. This makes \code{Fig} class instance
 creation optional, and makes the package mimic being a class instance. Those
 functions are simple wrappers on an internal \code{Fig} object and are prefixed to
 avoid masking.
+
+Set any number of values at once
 }
 \examples{
 
@@ -79,6 +86,13 @@ fig$set("foo", 1)
 fig$set("bar", 123)$set("baz", list(1, 2, 3))
 
 ## ------------------------------------------------
+## Method `Fig$set_many`
+## ------------------------------------------------
+
+fig <- Fig$new()
+fig$set_many("foo" = 1, "bar" = 2)
+
+## ------------------------------------------------
 ## Method `Fig$update_env_prefix`
 ## ------------------------------------------------
 
@@ -92,6 +106,7 @@ fig$update_env_prefix("RCONNECT_")
 \item \href{#method-delete}{\code{Fig$delete()}}
 \item \href{#method-get}{\code{Fig$get()}}
 \item \href{#method-set}{\code{Fig$set()}}
+\item \href{#method-set_many}{\code{Fig$set_many()}}
 \item \href{#method-update_env_prefix}{\code{Fig$update_env_prefix()}}
 \item \href{#method-clone}{\code{Fig$clone()}}
 }
@@ -229,6 +244,32 @@ Store a value
 \preformatted{fig <- Fig$new()
 fig$set("foo", 1)
 fig$set("bar", 123)$set("baz", list(1, 2, 3))
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-set_many"></a>}}
+\if{latex}{\out{\hypertarget{method-set_many}{}}}
+\subsection{Method \code{set_many()}}{
+Set any number of values at once
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Fig$set_many(...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{...}}{Named values Names are used as keys for provided values.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{fig <- Fig$new()
+fig$set_many("foo" = 1, "bar" = 2)
 }
 \if{html}{\out{</div>}}
 
