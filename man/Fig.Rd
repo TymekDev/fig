@@ -2,9 +2,27 @@
 % Please edit documentation in R/Fig.R
 \name{Fig}
 \alias{Fig}
+\alias{fig_get}
+\alias{fig_set}
 \title{Create a Fig to Store Config}
+\usage{
+fig_get(key)
+
+fig_set(key, value)
+}
+\arguments{
+\item{key}{A key value to store a value for.}
+
+\item{value}{A value to be stored.}
+}
 \description{
-Fig is the main driver in fig package.
+\code{Fig} class is a main driver of this package. For usage details
+refer to \code{Fig} methods documentation.
+
+Fig provides a set of exported functions. This makes \code{Fig} class instance
+creation optional, and makes the package mimic being a class instance. Those
+functions are simple wrappers on an internal fig object and are prefixed to
+avoid masking.
 }
 \section{Methods}{
 \subsection{Public methods}{

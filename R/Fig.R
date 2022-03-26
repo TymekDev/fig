@@ -1,6 +1,12 @@
 #' @title Create a Fig to Store Config
 #'
-#' @description Fig is the main driver in fig package.
+#' @description `Fig` class is a main driver of this package. For usage details
+#' refer to `Fig` methods documentation.
+#'
+#' Fig provides a set of exported functions. This makes `Fig` class instance
+#' creation optional, and makes the package mimic being a class instance. Those
+#' functions are simple wrappers on an internal fig object and are prefixed to
+#' avoid masking.
 #'
 #' @export
 Fig <- R6::R6Class(
@@ -29,3 +35,16 @@ Fig <- R6::R6Class(
     items = NULL
   )
 )
+
+fig <- Fig$new()
+
+#' @param key A key value to retrieve stored value for.
+#' @rdname Fig
+#' @export
+fig_get <- function(key) fig$get(key)
+
+#' @param key A key value to store a value for.
+#' @param value A value to be stored.
+#' @rdname Fig
+#' @export
+fig_set <- function(key, value) fig$set(key, value)
