@@ -43,10 +43,13 @@ Fig <- R6::R6Class( # nolint
     #' 1. System environment variable (case sensitive)
     #' 1. Value manually set
     #'
+    #' For system environment lookup dots are replaced by underscores, e.g.
+    #' `fig$get("foo.bar")` will look up __foo_bar__.
+    #'
     #' Additionally, Fig treats dots in `key` as nest level delimiters.
     #' Therefore, `fig$get("foo.bar")` is equivalent to `fig$get("foo")$bar`.
-    #' This behavior can be disabled by setting `options(fig.split = FALSE)` or
-    #' by providing `split` argument.
+    #' This behavior can be disabled either by setting `options(fig.split =
+    #' FALSE)` or by providing `split = FALSE` argument.
     #' @param key A key to retrieve its corresponding value.
     #' @param split A logical determining whether dots in `key` are treated
     #' specially or as is. See Details section.
@@ -63,7 +66,8 @@ Fig <- R6::R6Class( # nolint
     #' fig$get("bar.baz", split = FALSE) # == 3
     get = function(key, split = getOption("fig.split", TRUE)) {
       stopifnot(length(key) == 1)
-      value <- Sys.getenv(private$add_env_prefix(key), NA)
+      env_key <- sub(".", "_", key, fixed = TRUE)
+      value <- Sys.getenv(private$add_env_prefix(env_key), NA)
       if (!is.na(value)) {
         return(value)
       }
