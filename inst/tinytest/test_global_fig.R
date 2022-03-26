@@ -8,3 +8,8 @@ expect_equal(fig_get("a"), 1)
 old_fig <- fig:::global_fig()
 purge()
 expect_false(identical(fig:::global_fig(), old_fig))
+
+# fig_delete works
+fig_set("a", 1)
+expect_identical(fig_delete("a"), fig:::global_fig())
+expect_equal(fig_get("a"), NULL)

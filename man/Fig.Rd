@@ -2,10 +2,13 @@
 % Please edit documentation in R/Fig.R
 \name{Fig}
 \alias{Fig}
+\alias{fig_delete}
 \alias{fig_get}
 \alias{fig_set}
 \title{Create a Fig to Store Config}
 \usage{
+fig_delete(key)
+
 fig_get(key)
 
 fig_set(key, value)
