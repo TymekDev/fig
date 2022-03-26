@@ -47,12 +47,15 @@ Fig <- R6::R6Class( # nolint
     #' fig <- Fig$new()
     #' fig$set("foo", 1)
     #' fig$get("foo")
+    #'
+    #' fig$set("bar", list(baz = 2))
+    #' fig$get("bar.baz")
     get = function(key) {
       value <- Sys.getenv(private$add_env_prefix(key), NA)
       if (!is.na(value)) {
         return(value)
       }
-      private$items[[key]]
+      private$traverse_items(key)
     },
 
     #' @description Store a value
@@ -89,7 +92,14 @@ Fig <- R6::R6Class( # nolint
   ),
   private = list(
     add_env_prefix = NULL,
-    items = NULL
+    items = NULL,
+    traverse_items = function(key) {
+      value <- private$items
+      for (key_part in strsplit(key, ".", TRUE)[[1]]) {
+        value <- value[[key_part]]
+      }
+      value
+    }
   )
 )
 
