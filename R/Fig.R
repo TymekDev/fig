@@ -1,34 +1,35 @@
-#' @title Create a Fig to Store Config
+#' @title Fig for Your Config
 #'
 #' @description `Fig` class is a main driver of this package. For usage details
-#' refer to `Fig` methods documentation.
+#' refer to `Fig` class methods documentation.
 #'
 #' Fig provides a set of exported functions. This makes `Fig` class instance
-#' creation optional, and makes the package mimic being a class instance. Those
-#' functions are simple wrappers on an internal `Fig` object and are prefixed to
-#' avoid masking.
+#' creation optional, and makes the package itself mimic being a class instance.
+#' Those functions are wrappers on an internal `Fig` object.
 #'
 #' @export
 Fig <- R6::R6Class( # nolint
   classname = "Fig",
   public = list(
-    #' @description Create a new Fig instance
+    #' @description Create a New Fig Instance
     #' @param env_prefix (character) A prefix to be prepended to a key before
     #' system environment lookup.
     #' @examples
     #' fig <- Fig$new()
-    #' fig <- Fig$new("RCONNECT_")
+    #' fig <- Fig$new(env_prefix = "RCONNECT_")
     initialize = function(env_prefix = "") {
       self$configure(env_prefix = env_prefix)
       private$items <- new.env()
     },
 
-    #' @description Change Fig Settings
-    #' @param env_prefix (character) A prefix to be prepended to a key before system
-    #' environment lookup. Pass an empty string to reset.
+    #' @description Configure a Fig Instance
+    #' @details Unset arguments do not change configuration.
+    #' @param env_prefix (character) A prefix to be prepended to a key before
+    #' system environment lookup. Pass an empty string to reset.
     #' @examples
-    #' fig <- Fig$new()
-    #' fig$configure(env_prefix = "RCONNECT_")
+    #' fig <- Fig$new(env_prefix = "RCONNECT_")
+    #' fig$configure(env_prefix = "")
+    #' fig$configure() # has no effect
     configure = function(env_prefix) {
       if (!missing(env_prefix)) {
         stopifnot(
@@ -41,28 +42,30 @@ Fig <- R6::R6Class( # nolint
       invisible(self)
     },
 
-    #' @description Delete stored values
-    #' @param ... Keys to delete values for.
+    #' @description Delete Stored Values
+    #' @param ... Keys to be deleted.
     #' @examples
     #' fig <- Fig$new()
-    #' fig$store("foo", 1)$store("bar", 2)$store("baz", 3)
-    #' fig$get("foo") # == 1
+    #' fig$store_many("foo" = 1, "bar" = 2, "baz" = 3)
     #' fig$delete("foo")
-    #' fig$get("foo") # == NULL
     #' fig$delete("bar", "baz")
-    #' fig$get("bar") # == NULL
-    #' fig$get("baz") # == NULL
+    #' fig$get_many("foo", "bar", "baz") # == list(NULL, NULL, NULL)
     delete = function(...) {
       rm(list = c(...), envir = private$items)
       invisible(self)
     },
 
+    #' @description Delete All Stored Values
+    #' fig <- Fig$new()
+    #' fig$store_many("foo" = 1, "bar" = 2, "baz" = 3)
+    #' fig$delete_all()
+    #' fig$get_many("foo", "bar", "baz") # == list(NULL, NULL, NULL)
     delete_all = function() {
       private$items <- new.env()
       invisible(self)
     },
 
-    #' @description Get a value
+    #' @description Retrieve a Stored Value
     #' @details This function returns values based on a following priority
     #' (highest to lowest). If value is not found, then it looks up next level
     #' in the precedence.
@@ -76,7 +79,7 @@ Fig <- R6::R6Class( # nolint
     #' Therefore, `fig$get("foo.bar")` is equivalent to `fig$get("foo")$bar`.
     #' This behavior can be disabled either by setting `options(fig.split =
     #' FALSE)` or by providing `split = FALSE` argument.
-    #' @param key A key to retrieve its corresponding value.
+    #' @param key A key to retrieve a value for.
     #' @param split A logical determining whether dots in `key` are treated
     #' specially or as is. See Details section.
     #' @examples
@@ -87,7 +90,7 @@ Fig <- R6::R6Class( # nolint
     #' fig$store("bar", list(baz = 2))
     #' fig$get("bar.baz")
     #'
-    #' fig$store("bar.baz", 3)
+    #' fig$store("bar.baz", 3, split = FALSE)
     #' fig$get("bar.baz") # == 2
     #' fig$get("bar.baz", split = FALSE) # == 3
     get = function(key, split = getOption("fig.split", TRUE)) {
@@ -100,11 +103,11 @@ Fig <- R6::R6Class( # nolint
       if (isTRUE(split)) private$traverse_items(key) else private$items[[key]]
     },
 
-    #' @description Store a value
+    #' @description Store a Value
     #' @details Fig treats dots in `key` as nest level delimiters. Therefore,
-    #' `fig$store("foo.bar", 1)` is equivalent to `fig$store("foo", list(bar = 1)`.
-    #' This behavior can be disabled either by setting `options(fig.split =
-    #' FALSE)` or by providing `split = FALSE` argument.
+    #' `fig$store("foo.bar", 1)` is equivalent to `fig$store("foo", list(bar =
+    #' 1)`. This behavior can be disabled either by setting `options(fig.split
+    #' = FALSE)` or by providing `split = FALSE` argument.
     #' @param split A logical determining whether dots in `key` are treated
     #' specially or as is. See Details section.
     #' @param key A key to store a value for.
@@ -113,7 +116,6 @@ Fig <- R6::R6Class( # nolint
     #' fig <- Fig$new()
     #' fig$store("foo", 1)
     #' fig$store("bar", 123)$store("baz", list(1, 2, 3))
-    #'
     #' fig$store("x.y", "a", FALSE)
     store = function(key, value, split = getOption("fig.split", TRUE)) {
       if (isTRUE(split)) {
@@ -124,17 +126,18 @@ Fig <- R6::R6Class( # nolint
       invisible(self)
     },
 
-    #' @param cfg (Named list) Names are used as keys for provided values.
-    #' @param delete_all A logical determining whether to call `delete_all()` before
-    #' saving values.
+    #' @description Store a List's Contents
+    #' @param l (named list) Names are used as keys for storing their values.
+    #' @param delete_all A logical determining whether to call `delete_all()`
+    #' before storing values.
     #' @param split A logical determining whether dots in `key` are treated
     #' specially or as is. See Details section in `store()`.
     #' @examples
     #' fig <- fig$New()
     #' fig$store_list(list(foo = 1, bar = 2))
-    #' fig$store_list(list(foo = 123, baz = "abc"), TRUE)
-    store_list = function(cfg, delete_all = FALSE, split = getOption("fig.split", TRUE)) {
-      keys <- names(cfg)
+    #' fig$store_list(list(foo = 123, baz = "abc"), split = TRUE)
+    store_list = function(l, delete_all = FALSE, split = getOption("fig.split", TRUE)) {
+      keys <- names(l)
       stopifnot(
         !is.null(keys),
         all(keys != ""),
@@ -144,22 +147,23 @@ Fig <- R6::R6Class( # nolint
         self$delete_all()
       }
       for (key in keys) {
-        self$store(key, cfg[[key]], split)
+        self$store(key, l[[key]], split)
       }
       invisible(self)
     },
 
-    #' @description Set any number of values at once
-    #' @param ... Named values. Names are used as keys for provided values.
-    #' @param .delete_all A logical determining whether to call `delete_all()` before
-    #' saving values.
+    #' @description Set Any Number of Values at Once
+    #' @param ... Named arguments. Names are used as keys for storing argument
+    #' values.
+    #' @param .delete_all A logical determining whether to call `delete_all()`
+    #' before storing values.
     #' @param .split A logical determining whether dots in `key` are treated
     #' specially or as is. See Details section in `store()`.
     #' @examples
     #' fig <- Fig$new()
     #' fig$store_many("foo" = 1, "bar" = 2)
     #' fig$store_many("foo.bar.baz" = 1, .split = TRUE)
-    #' fig$store_many("foo" = "a", "baz" = 123, .delete_all = TRUE, .split = TRUE)
+    #' fig$store_many("foo" = "a", "baz" = 123, .delete_all = TRUE, .split = FALSE)
     store_many = function(..., .delete_all = FALSE, .split = getOption("fig.split", TRUE)) {
       self$store_list(list(...), .delete_all, .split)
     }
@@ -199,39 +203,19 @@ Fig <- R6::R6Class( # nolint
 
 fig <- Fig$new()
 
-#' @param env_prefix (character) A prefix to be prepended to a key before system
-#' environment lookup. Pass an empty string to reset.
+#' @param env_prefix (character) A prefix to be prepended to a key before
+#' system environment lookup. Pass an empty string to reset.
 #' @rdname Fig
 #' @export
 fig_configure <- function(env_prefix) {
   fig$configure(env_prefix)
 }
 
-#' @param ... Keys to delete values for.
+#' @param ... Keys to be deleted.
 #' @rdname Fig
 #' @export
 fig_delete <- function(...) {
   fig$delete(...)
-}
-
-#' @param key A key to retrieve its corresponding value.
-#' @param split A logical determining whether dots in `key` are treated
-#' specially or as is. See Details section.
-#' @rdname Fig
-#' @export
-fig_get <- function(key, split = getOption("fig.split", TRUE)) {
-  fig$get(key, split)
-}
-
-#' @param cfg (Named list) Names are used as keys for provided values.
-#' @param delete_all A logical determining whether to call `delete_all()` before saving
-#' values.
-#' @param split A logical determining whether dots in `key` are treated
-#' specially or as is. See Details section in `store()`.
-#' @rdname Fig
-#' @export
-fig_store_list <- function(cfg, delete_all = FALSE, split = getOption("fig.split", TRUE)) {
-  fig$store_list(cfg, delete_all, split)
 }
 
 #' @rdname Fig
@@ -240,21 +224,32 @@ fig_delete_all <- function() {
   fig$delete_all()
 }
 
-#' @param key A key to store a value for.
-#' @param value A value to be stored.
+#' @param key A key to retrieve a value for.
 #' @param split A logical determining whether dots in `key` are treated
 #' specially or as is. See Details section.
+#' @rdname Fig
+#' @export
+fig_get <- function(key, split = getOption("fig.split", TRUE)) {
+  fig$get(key, split)
+}
+
+#' @param l (named list) Names are used as keys for storing their values.
+#' @param delete_all A logical determining whether to call `delete_all()`
+#' before storing values.
+#' @param split A logical determining whether dots in `key` are treated
+#' specially or as is. See Details section in `store()`.
+#' @rdname Fig
+#' @export
+fig_store_list <- function(l, delete_all = FALSE, split = getOption("fig.split", TRUE)) {
+  fig$store_list(l, delete_all, split)
+}
+
 #' @rdname Fig
 #' @export
 fig_store <- function(key, value, split = getOption("fig.split", TRUE)) {
   fig$store(key, value, split)
 }
 
-#' @param ... Named values. Names are used as keys for provided values.
-#' @param .delete_all A logical determining whether to call `delete_all()` before saving
-#' values.
-#' @param .split A logical determining whether dots in `key` are treated
-#' specially or as is. See Details section in `store()`.
 #' @rdname Fig
 #' @export
 fig_store_many <- function(..., .delete_all = FALSE, .split = getOption("fig.split", TRUE)) {

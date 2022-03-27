@@ -4,59 +4,50 @@
 \alias{Fig}
 \alias{fig_configure}
 \alias{fig_delete}
+\alias{fig_delete_all}
 \alias{fig_get}
 \alias{fig_store_list}
-\alias{fig_delete_all}
 \alias{fig_store}
 \alias{fig_store_many}
-\title{Create a Fig to Store Config}
+\title{Fig for Your Config}
 \usage{
 fig_configure(env_prefix)
 
 fig_delete(...)
 
+fig_delete_all()
+
 fig_get(key, split = getOption("fig.split", TRUE))
 
-fig_store_list(cfg, delete_all = FALSE, split = getOption("fig.split", TRUE))
-
-fig_delete_all()
+fig_store_list(l, delete_all = FALSE, split = getOption("fig.split", TRUE))
 
 fig_store(key, value, split = getOption("fig.split", TRUE))
 
 fig_store_many(..., .delete_all = FALSE, .split = getOption("fig.split", TRUE))
 }
 \arguments{
-\item{env_prefix}{(character) A prefix to be prepended to a key before system
-environment lookup. Pass an empty string to reset.}
+\item{env_prefix}{(character) A prefix to be prepended to a key before
+system environment lookup. Pass an empty string to reset.}
 
-\item{...}{Named values. Names are used as keys for provided values.}
+\item{...}{Keys to be deleted.}
 
-\item{key}{A key to store a value for.}
+\item{key}{A key to retrieve a value for.}
 
 \item{split}{A logical determining whether dots in \code{key} are treated
-specially or as is. See Details section.}
-
-\item{cfg}{(Named list) Names are used as keys for provided values.}
-
-\item{delete_all}{A logical determining whether to call \code{delete_all()} before saving
-values.}
-
-\item{value}{A value to be stored.}
-
-\item{.delete_all}{A logical determining whether to call \code{delete_all()} before saving
-values.}
-
-\item{.split}{A logical determining whether dots in \code{key} are treated
 specially or as is. See Details section in \code{store()}.}
+
+\item{l}{(named list) Names are used as keys for storing their values.}
+
+\item{delete_all}{A logical determining whether to call \code{delete_all()}
+before storing values.}
 }
 \description{
 \code{Fig} class is a main driver of this package. For usage details
-refer to \code{Fig} methods documentation.
+refer to \code{Fig} class methods documentation.
 
 Fig provides a set of exported functions. This makes \code{Fig} class instance
-creation optional, and makes the package mimic being a class instance. Those
-functions are simple wrappers on an internal \code{Fig} object and are prefixed to
-avoid masking.
+creation optional, and makes the package itself mimic being a class instance.
+Those functions are wrappers on an internal \code{Fig} object.
 }
 \examples{
 
@@ -65,27 +56,25 @@ avoid masking.
 ## ------------------------------------------------
 
 fig <- Fig$new()
-fig <- Fig$new("RCONNECT_")
+fig <- Fig$new(env_prefix = "RCONNECT_")
 
 ## ------------------------------------------------
 ## Method `Fig$configure`
 ## ------------------------------------------------
 
-fig <- Fig$new()
-fig$configure(env_prefix = "RCONNECT_")
+fig <- Fig$new(env_prefix = "RCONNECT_")
+fig$configure(env_prefix = "")
+fig$configure() # has no effect
 
 ## ------------------------------------------------
 ## Method `Fig$delete`
 ## ------------------------------------------------
 
 fig <- Fig$new()
-fig$store("foo", 1)$store("bar", 2)$store("baz", 3)
-fig$get("foo") # == 1
+fig$store_many("foo" = 1, "bar" = 2, "baz" = 3)
 fig$delete("foo")
-fig$get("foo") # == NULL
 fig$delete("bar", "baz")
-fig$get("bar") # == NULL
-fig$get("baz") # == NULL
+fig$get_many("foo", "bar", "baz") # == list(NULL, NULL, NULL)
 
 ## ------------------------------------------------
 ## Method `Fig$get`
@@ -98,7 +87,7 @@ fig$get("foo")
 fig$store("bar", list(baz = 2))
 fig$get("bar.baz")
 
-fig$store("bar.baz", 3)
+fig$store("bar.baz", 3, split = FALSE)
 fig$get("bar.baz") # == 2
 fig$get("bar.baz", split = FALSE) # == 3
 
@@ -109,7 +98,6 @@ fig$get("bar.baz", split = FALSE) # == 3
 fig <- Fig$new()
 fig$store("foo", 1)
 fig$store("bar", 123)$store("baz", list(1, 2, 3))
-
 fig$store("x.y", "a", FALSE)
 
 ## ------------------------------------------------
@@ -118,7 +106,7 @@ fig$store("x.y", "a", FALSE)
 
 fig <- fig$New()
 fig$store_list(list(foo = 1, bar = 2))
-fig$store_list(list(foo = 123, baz = "abc"), TRUE)
+fig$store_list(list(foo = 123, baz = "abc"), split = TRUE)
 
 ## ------------------------------------------------
 ## Method `Fig$store_many`
@@ -127,7 +115,7 @@ fig$store_list(list(foo = 123, baz = "abc"), TRUE)
 fig <- Fig$new()
 fig$store_many("foo" = 1, "bar" = 2)
 fig$store_many("foo.bar.baz" = 1, .split = TRUE)
-fig$store_many("foo" = "a", "baz" = 123, .delete_all = TRUE, .split = TRUE)
+fig$store_many("foo" = "a", "baz" = 123, .delete_all = TRUE, .split = FALSE)
 }
 \section{Methods}{
 \subsection{Public methods}{
@@ -147,7 +135,7 @@ fig$store_many("foo" = "a", "baz" = 123, .delete_all = TRUE, .split = TRUE)
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
-Create a new Fig instance
+Create a New Fig Instance
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Fig$new(env_prefix = "")}\if{html}{\out{</div>}}
 }
@@ -163,7 +151,7 @@ system environment lookup.}
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{fig <- Fig$new()
-fig <- Fig$new("RCONNECT_")
+fig <- Fig$new(env_prefix = "RCONNECT_")
 }
 \if{html}{\out{</div>}}
 
@@ -174,7 +162,7 @@ fig <- Fig$new("RCONNECT_")
 \if{html}{\out{<a id="method-configure"></a>}}
 \if{latex}{\out{\hypertarget{method-configure}{}}}
 \subsection{Method \code{configure()}}{
-Change Fig Settings
+Configure a Fig Instance
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Fig$configure(env_prefix)}\if{html}{\out{</div>}}
 }
@@ -182,15 +170,20 @@ Change Fig Settings
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{env_prefix}}{(character) A prefix to be prepended to a key before system
-environment lookup. Pass an empty string to reset.}
+\item{\code{env_prefix}}{(character) A prefix to be prepended to a key before
+system environment lookup. Pass an empty string to reset.}
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Details}{
+Unset arguments do not change configuration.
+}
+
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{fig <- Fig$new()
-fig$configure(env_prefix = "RCONNECT_")
+\preformatted{fig <- Fig$new(env_prefix = "RCONNECT_")
+fig$configure(env_prefix = "")
+fig$configure() # has no effect
 }
 \if{html}{\out{</div>}}
 
@@ -201,7 +194,7 @@ fig$configure(env_prefix = "RCONNECT_")
 \if{html}{\out{<a id="method-delete"></a>}}
 \if{latex}{\out{\hypertarget{method-delete}{}}}
 \subsection{Method \code{delete()}}{
-Delete stored values
+Delete Stored Values
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Fig$delete(...)}\if{html}{\out{</div>}}
 }
@@ -209,20 +202,17 @@ Delete stored values
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{...}}{Keys to delete values for.}
+\item{\code{...}}{Keys to be deleted.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{fig <- Fig$new()
-fig$store("foo", 1)$store("bar", 2)$store("baz", 3)
-fig$get("foo") # == 1
+fig$store_many("foo" = 1, "bar" = 2, "baz" = 3)
 fig$delete("foo")
-fig$get("foo") # == NULL
 fig$delete("bar", "baz")
-fig$get("bar") # == NULL
-fig$get("baz") # == NULL
+fig$get_many("foo", "bar", "baz") # == list(NULL, NULL, NULL)
 }
 \if{html}{\out{</div>}}
 
@@ -233,6 +223,11 @@ fig$get("baz") # == NULL
 \if{html}{\out{<a id="method-delete_all"></a>}}
 \if{latex}{\out{\hypertarget{method-delete_all}{}}}
 \subsection{Method \code{delete_all()}}{
+Delete All Stored Values
+fig <- Fig$new()
+fig$store_many("foo" = 1, "bar" = 2, "baz" = 3)
+fig$delete_all()
+fig$get_many("foo", "bar", "baz") # == list(NULL, NULL, NULL)
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Fig$delete_all()}\if{html}{\out{</div>}}
 }
@@ -242,7 +237,7 @@ fig$get("baz") # == NULL
 \if{html}{\out{<a id="method-get"></a>}}
 \if{latex}{\out{\hypertarget{method-get}{}}}
 \subsection{Method \code{get()}}{
-Get a value
+Retrieve a Stored Value
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Fig$get(key, split = getOption("fig.split", TRUE))}\if{html}{\out{</div>}}
 }
@@ -250,7 +245,7 @@ Get a value
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{key}}{A key to retrieve its corresponding value.}
+\item{\code{key}}{A key to retrieve a value for.}
 
 \item{\code{split}}{A logical determining whether dots in \code{key} are treated
 specially or as is. See Details section.}
@@ -283,7 +278,7 @@ fig$get("foo")
 fig$store("bar", list(baz = 2))
 fig$get("bar.baz")
 
-fig$store("bar.baz", 3)
+fig$store("bar.baz", 3, split = FALSE)
 fig$get("bar.baz") # == 2
 fig$get("bar.baz", split = FALSE) # == 3
 }
@@ -296,7 +291,7 @@ fig$get("bar.baz", split = FALSE) # == 3
 \if{html}{\out{<a id="method-store"></a>}}
 \if{latex}{\out{\hypertarget{method-store}{}}}
 \subsection{Method \code{store()}}{
-Store a value
+Store a Value
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Fig$store(key, value, split = getOption("fig.split", TRUE))}\if{html}{\out{</div>}}
 }
@@ -315,8 +310,7 @@ specially or as is. See Details section.}
 }
 \subsection{Details}{
 Fig treats dots in \code{key} as nest level delimiters. Therefore,
-\code{fig$store("foo.bar", 1)} is equivalent to \verb{fig$store("foo", list(bar = 1)}.
-This behavior can be disabled either by setting \code{options(fig.split = FALSE)} or by providing \code{split = FALSE} argument.
+\code{fig$store("foo.bar", 1)} is equivalent to \verb{fig$store("foo", list(bar = 1)}. This behavior can be disabled either by setting \code{options(fig.split = FALSE)} or by providing \code{split = FALSE} argument.
 }
 
 \subsection{Examples}{
@@ -324,7 +318,6 @@ This behavior can be disabled either by setting \code{options(fig.split = FALSE)
 \preformatted{fig <- Fig$new()
 fig$store("foo", 1)
 fig$store("bar", 123)$store("baz", list(1, 2, 3))
-
 fig$store("x.y", "a", FALSE)
 }
 \if{html}{\out{</div>}}
@@ -336,17 +329,18 @@ fig$store("x.y", "a", FALSE)
 \if{html}{\out{<a id="method-store_list"></a>}}
 \if{latex}{\out{\hypertarget{method-store_list}{}}}
 \subsection{Method \code{store_list()}}{
+Store a List's Contents
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Fig$store_list(cfg, delete_all = FALSE, split = getOption("fig.split", TRUE))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Fig$store_list(l, delete_all = FALSE, split = getOption("fig.split", TRUE))}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{cfg}}{(Named list) Names are used as keys for provided values.}
+\item{\code{l}}{(named list) Names are used as keys for storing their values.}
 
-\item{\code{delete_all}}{A logical determining whether to call \code{delete_all()} before
-saving values.}
+\item{\code{delete_all}}{A logical determining whether to call \code{delete_all()}
+before storing values.}
 
 \item{\code{split}}{A logical determining whether dots in \code{key} are treated
 specially or as is. See Details section in \code{store()}.}
@@ -357,7 +351,7 @@ specially or as is. See Details section in \code{store()}.}
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{fig <- fig$New()
 fig$store_list(list(foo = 1, bar = 2))
-fig$store_list(list(foo = 123, baz = "abc"), TRUE)
+fig$store_list(list(foo = 123, baz = "abc"), split = TRUE)
 }
 \if{html}{\out{</div>}}
 
@@ -368,7 +362,7 @@ fig$store_list(list(foo = 123, baz = "abc"), TRUE)
 \if{html}{\out{<a id="method-store_many"></a>}}
 \if{latex}{\out{\hypertarget{method-store_many}{}}}
 \subsection{Method \code{store_many()}}{
-Set any number of values at once
+Set Any Number of Values at Once
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Fig$store_many(..., .delete_all = FALSE, .split = getOption("fig.split", TRUE))}\if{html}{\out{</div>}}
 }
@@ -376,10 +370,11 @@ Set any number of values at once
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{...}}{Named values. Names are used as keys for provided values.}
+\item{\code{...}}{Named arguments. Names are used as keys for storing argument
+values.}
 
-\item{\code{.delete_all}}{A logical determining whether to call \code{delete_all()} before
-saving values.}
+\item{\code{.delete_all}}{A logical determining whether to call \code{delete_all()}
+before storing values.}
 
 \item{\code{.split}}{A logical determining whether dots in \code{key} are treated
 specially or as is. See Details section in \code{store()}.}
@@ -391,7 +386,7 @@ specially or as is. See Details section in \code{store()}.}
 \preformatted{fig <- Fig$new()
 fig$store_many("foo" = 1, "bar" = 2)
 fig$store_many("foo.bar.baz" = 1, .split = TRUE)
-fig$store_many("foo" = "a", "baz" = 123, .delete_all = TRUE, .split = TRUE)
+fig$store_many("foo" = "a", "baz" = 123, .delete_all = TRUE, .split = FALSE)
 }
 \if{html}{\out{</div>}}
 
