@@ -77,31 +77,6 @@ Fig <- R6::R6Class( # nolint
       if (isTRUE(split)) private$traverse_items(key) else private$items[[key]]
     },
 
-    #' @param cfg (Named list) Names are used as keys for provided values.
-    #' @param purge A logical determining whether to call `purge()` before
-    #' saving values.
-    #' @param split A logical determining whether dots in `key` are treated
-    #' specially or as is. See Details section in `store()`.
-    #' @examples
-    #' fig <- fig$New()
-    #' fig$load_config(list(foo = 1, bar = 2))
-    #' fig$load_config(list(foo = 123, baz = "abc"), TRUE)
-    load_config = function(cfg, purge = FALSE, split = getOption("fig.split", TRUE)) {
-      keys <- names(cfg)
-      stopifnot(
-        !is.null(keys),
-        all(keys != ""),
-        length(unique(keys)) == length(keys)
-      )
-      if (isTRUE(purge)) {
-        self$purge()
-      }
-      for (key in keys) {
-        self$store(key, cfg[[key]], split)
-      }
-      invisible(self)
-    },
-
     #' @description Purge stored values
     #' @examples
     #' fig <- Fig$new()
@@ -135,6 +110,31 @@ Fig <- R6::R6Class( # nolint
       invisible(self)
     },
 
+    #' @param cfg (Named list) Names are used as keys for provided values.
+    #' @param purge A logical determining whether to call `purge()` before
+    #' saving values.
+    #' @param split A logical determining whether dots in `key` are treated
+    #' specially or as is. See Details section in `store()`.
+    #' @examples
+    #' fig <- fig$New()
+    #' fig$store_list(list(foo = 1, bar = 2))
+    #' fig$store_list(list(foo = 123, baz = "abc"), TRUE)
+    store_list = function(cfg, purge = FALSE, split = getOption("fig.split", TRUE)) {
+      keys <- names(cfg)
+      stopifnot(
+        !is.null(keys),
+        all(keys != ""),
+        length(unique(keys)) == length(keys)
+      )
+      if (isTRUE(purge)) {
+        self$purge()
+      }
+      for (key in keys) {
+        self$store(key, cfg[[key]], split)
+      }
+      invisible(self)
+    },
+
     #' @description Set any number of values at once
     #' @param ... Named values. Names are used as keys for provided values.
     #' @param .purge A logical determining whether to call `purge()` before
@@ -147,7 +147,7 @@ Fig <- R6::R6Class( # nolint
     #' fig$store_many("foo.bar.baz" = 1, .split = TRUE)
     #' fig$store_many("foo" = "a", "baz" = 123, .purge = TRUE, .split = TRUE)
     store_many = function(..., .purge = FALSE, .split = getOption("fig.split", TRUE)) {
-      self$load_config(list(...), .purge, .split)
+      self$store_list(list(...), .purge, .split)
     },
 
     #' @description Update prefix for system environment variables
@@ -230,8 +230,8 @@ fig_get <- function(key, split = getOption("fig.split", TRUE)) {
 #' specially or as is. See Details section in `store()`.
 #' @rdname Fig
 #' @export
-fig_load_config <- function(cfg, purge = FALSE, split = getOption("fig.split", TRUE)) {
-  fig$load_config(cfg, purge, split)
+fig_store_list <- function(cfg, purge = FALSE, split = getOption("fig.split", TRUE)) {
+  fig$store_list(cfg, purge, split)
 }
 
 #' @rdname Fig
