@@ -48,7 +48,7 @@ test_that("fig_store works", {
   fig_store("foo", l)
   expect_identical(fig_get("foo"), l)
 
-  fig_purge()
+  fig_delete_all()
 })
 
 test_that("fig_store shares store arguments", {

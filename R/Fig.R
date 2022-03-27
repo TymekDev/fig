@@ -57,6 +57,11 @@ Fig <- R6::R6Class( # nolint
       invisible(self)
     },
 
+    delete_all = function() {
+      private$items <- new.env()
+      invisible(self)
+    },
+
     #' @description Get a value
     #' @details This function returns values based on a following priority
     #' (highest to lowest). If value is not found, then it looks up next level
@@ -95,15 +100,6 @@ Fig <- R6::R6Class( # nolint
       if (isTRUE(split)) private$traverse_items(key) else private$items[[key]]
     },
 
-    #' @description Purge stored values
-    #' @examples
-    #' fig <- Fig$new()
-    #' fig$store("a", 1)$purge()$get("a") # == NULL
-    purge = function() {
-      private$items <- new.env()
-      invisible(self)
-    },
-
     #' @description Store a value
     #' @details Fig treats dots in `key` as nest level delimiters. Therefore,
     #' `fig$store("foo.bar", 1)` is equivalent to `fig$store("foo", list(bar = 1)`.
@@ -129,7 +125,7 @@ Fig <- R6::R6Class( # nolint
     },
 
     #' @param cfg (Named list) Names are used as keys for provided values.
-    #' @param purge A logical determining whether to call `purge()` before
+    #' @param delete_all A logical determining whether to call `delete_all()` before
     #' saving values.
     #' @param split A logical determining whether dots in `key` are treated
     #' specially or as is. See Details section in `store()`.
@@ -137,15 +133,15 @@ Fig <- R6::R6Class( # nolint
     #' fig <- fig$New()
     #' fig$store_list(list(foo = 1, bar = 2))
     #' fig$store_list(list(foo = 123, baz = "abc"), TRUE)
-    store_list = function(cfg, purge = FALSE, split = getOption("fig.split", TRUE)) {
+    store_list = function(cfg, delete_all = FALSE, split = getOption("fig.split", TRUE)) {
       keys <- names(cfg)
       stopifnot(
         !is.null(keys),
         all(keys != ""),
         length(unique(keys)) == length(keys)
       )
-      if (isTRUE(purge)) {
-        self$purge()
+      if (isTRUE(delete_all)) {
+        self$delete_all()
       }
       for (key in keys) {
         self$store(key, cfg[[key]], split)
@@ -155,7 +151,7 @@ Fig <- R6::R6Class( # nolint
 
     #' @description Set any number of values at once
     #' @param ... Named values. Names are used as keys for provided values.
-    #' @param .purge A logical determining whether to call `purge()` before
+    #' @param .delete_all A logical determining whether to call `delete_all()` before
     #' saving values.
     #' @param .split A logical determining whether dots in `key` are treated
     #' specially or as is. See Details section in `store()`.
@@ -163,9 +159,9 @@ Fig <- R6::R6Class( # nolint
     #' fig <- Fig$new()
     #' fig$store_many("foo" = 1, "bar" = 2)
     #' fig$store_many("foo.bar.baz" = 1, .split = TRUE)
-    #' fig$store_many("foo" = "a", "baz" = 123, .purge = TRUE, .split = TRUE)
-    store_many = function(..., .purge = FALSE, .split = getOption("fig.split", TRUE)) {
-      self$store_list(list(...), .purge, .split)
+    #' fig$store_many("foo" = "a", "baz" = 123, .delete_all = TRUE, .split = TRUE)
+    store_many = function(..., .delete_all = FALSE, .split = getOption("fig.split", TRUE)) {
+      self$store_list(list(...), .delete_all, .split)
     }
   ),
   private = list(
@@ -228,20 +224,20 @@ fig_get <- function(key, split = getOption("fig.split", TRUE)) {
 }
 
 #' @param cfg (Named list) Names are used as keys for provided values.
-#' @param purge A logical determining whether to call `purge()` before saving
+#' @param delete_all A logical determining whether to call `delete_all()` before saving
 #' values.
 #' @param split A logical determining whether dots in `key` are treated
 #' specially or as is. See Details section in `store()`.
 #' @rdname Fig
 #' @export
-fig_store_list <- function(cfg, purge = FALSE, split = getOption("fig.split", TRUE)) {
-  fig$store_list(cfg, purge, split)
+fig_store_list <- function(cfg, delete_all = FALSE, split = getOption("fig.split", TRUE)) {
+  fig$store_list(cfg, delete_all, split)
 }
 
 #' @rdname Fig
 #' @export
-fig_purge <- function() {
-  fig$purge()
+fig_delete_all <- function() {
+  fig$delete_all()
 }
 
 #' @param key A key to store a value for.
@@ -255,12 +251,12 @@ fig_store <- function(key, value, split = getOption("fig.split", TRUE)) {
 }
 
 #' @param ... Named values. Names are used as keys for provided values.
-#' @param .purge A logical determining whether to call `purge()` before saving
+#' @param .delete_all A logical determining whether to call `delete_all()` before saving
 #' values.
 #' @param .split A logical determining whether dots in `key` are treated
 #' specially or as is. See Details section in `store()`.
 #' @rdname Fig
 #' @export
-fig_store_many <- function(..., .purge = FALSE, .split = getOption("fig.split", TRUE)) {
-  fig$store_many(..., .purge = .purge, .split = .split)
+fig_store_many <- function(..., .delete_all = FALSE, .split = getOption("fig.split", TRUE)) {
+  fig$store_many(..., .delete_all = .delete_all, .split = .split)
 }

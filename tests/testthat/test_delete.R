@@ -15,7 +15,7 @@ test_that("fig_delete works", {
   fig_store("foo", 1)
   fig_delete("foo")
   expect_equal(fig_get("foo"), NULL)
-  fig_purge()
+  fig_delete_all()
 })
 
 test_that("fig_delete shares delete arguments", {
