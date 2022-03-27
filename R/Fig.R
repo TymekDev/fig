@@ -103,6 +103,14 @@ Fig <- R6::R6Class( # nolint
       if (isTRUE(split)) private$traverse_items(key) else private$items[[key]]
     },
 
+    #' @description Retrieve Any Number of Stored Values
+    #' @param ... Keys to retrieve values for.
+    #' @param .split A logical determining whether dots in `key` are treated
+    #' specially or as is. See Details section in `get()`.
+    get_many = function(..., .split = getOption("fig.split", TRUE)) {
+      lapply(list(...), self$get, split = .split)
+    },
+
     #' @description Store a Value
     #' @details Fig treats dots in `key` as nest level delimiters. Therefore,
     #' `fig$store("foo.bar", 1)` is equivalent to `fig$store("foo", list(bar =
@@ -224,6 +232,15 @@ fig_delete_all <- function() {
 #' @export
 fig_get <- function(key, split = getOption("fig.split", TRUE)) {
   fig$get(key, split)
+}
+
+#' @param ... Keys to retrieve values for.
+#' @param .split A logical determining whether dots in `key` are treated
+#' specially or as is. See Details section in `get()`.
+#' @rdname Fig
+#' @export
+fig_get_many <- function(..., .split = getOption("fig.split", TRUE)) {
+  fig$get_many(..., .split = .split)
 }
 
 #' @param l (named list) Names are used as keys for storing their values.

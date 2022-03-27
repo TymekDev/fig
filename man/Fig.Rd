@@ -6,6 +6,7 @@
 \alias{fig_delete}
 \alias{fig_delete_all}
 \alias{fig_get}
+\alias{fig_get_many}
 \alias{fig_store_list}
 \alias{fig_store}
 \alias{fig_store_many}
@@ -19,6 +20,8 @@ fig_delete_all()
 
 fig_get(key, split = getOption("fig.split", TRUE))
 
+fig_get_many(..., .split = getOption("fig.split", TRUE))
+
 fig_store_list(l, split = getOption("fig.split", TRUE))
 
 fig_store(key, value, split = getOption("fig.split", TRUE))
@@ -29,12 +32,15 @@ fig_store_many(..., .split = getOption("fig.split", TRUE))
 \item{env_prefix}{(character) A prefix to be prepended to a key before
 system environment lookup. Pass an empty string to reset.}
 
-\item{...}{Keys to be deleted.}
+\item{...}{Keys to retrieve values for.}
 
 \item{key}{A key to retrieve a value for.}
 
 \item{split}{A logical determining whether dots in \code{key} are treated
 specially or as is. See Details section in \code{store()}.}
+
+\item{.split}{A logical determining whether dots in \code{key} are treated
+specially or as is. See Details section in \code{get()}.}
 
 \item{l}{(named list) Names are used as keys for storing their values.}
 }
@@ -122,6 +128,7 @@ fig$store_many("foo" = "a", "baz" = 123, .split = FALSE)
 \item \href{#method-delete}{\code{Fig$delete()}}
 \item \href{#method-delete_all}{\code{Fig$delete_all()}}
 \item \href{#method-get}{\code{Fig$get()}}
+\item \href{#method-get_many}{\code{Fig$get_many()}}
 \item \href{#method-store}{\code{Fig$store()}}
 \item \href{#method-store_list}{\code{Fig$store_list()}}
 \item \href{#method-store_many}{\code{Fig$store_many()}}
@@ -283,6 +290,26 @@ fig$get("bar.baz", split = FALSE) # == 3
 
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_many"></a>}}
+\if{latex}{\out{\hypertarget{method-get_many}{}}}
+\subsection{Method \code{get_many()}}{
+Retrieve Any Number of Stored Values
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Fig$get_many(..., .split = getOption("fig.split", TRUE))}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{...}}{Keys to retrieve values for.}
+
+\item{\code{.split}}{A logical determining whether dots in \code{key} are treated
+specially or as is. See Details section in \code{get()}.}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-store"></a>}}
