@@ -184,6 +184,8 @@ Fig <- R6::R6Class( # nolint
   )
 )
 
+fig <- Fig$new()
+
 #' @param key A key to delete its corresponding value.
 #' @rdname Fig
 #' @export
@@ -229,5 +231,3 @@ fig_set_many <- function(...) {
 fig_update_env_prefix <- function(env_prefix) {
   fig$update_env_prefix(env_prefix)
 }
-
-fig <- Fig$new()
