@@ -147,7 +147,7 @@ Fig <- R6::R6Class( # nolint
       invisible(self)
     },
 
-    #' @description Set Any Number of Values at Once
+    #' @description Set Any Number of Values
     #' @param ... Named arguments. Names are used as keys for storing argument
     #' values.
     #' @param .split A logical determining whether dots in `key` are treated
