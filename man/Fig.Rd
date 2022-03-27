@@ -21,7 +21,7 @@ fig_purge()
 
 fig_set(key, value, split = getOption("fig.split", TRUE))
 
-fig_set_many(..., .split = getOption("fig.split", TRUE))
+fig_set_many(..., .purge = FALSE, .split = getOption("fig.split", TRUE))
 
 fig_update_env_prefix(env_prefix)
 }
@@ -39,6 +39,9 @@ values.}
 \item{value}{A value to be stored.}
 
 \item{...}{Named values. Names are used as keys for provided values.}
+
+\item{.purge}{A logical determining whether to call \code{purge()} before saving
+values.}
 
 \item{.split}{A logical determining whether dots in \code{key} are treated
 specially or as is. See Details section in \code{set()}.}
@@ -121,6 +124,7 @@ fig$set("x.y", "a", FALSE)
 fig <- Fig$new()
 fig$set_many("foo" = 1, "bar" = 2)
 fig$set_many("foo.bar.baz" = 1, .split = TRUE)
+fig$set_many("foo" = "a", "baz" = 123, .purge = TRUE, .split = TRUE)
 
 ## ------------------------------------------------
 ## Method `Fig$update_env_prefix`
@@ -352,13 +356,16 @@ fig$set("x.y", "a", FALSE)
 \subsection{Method \code{set_many()}}{
 Set any number of values at once
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Fig$set_many(..., .split = getOption("fig.split", TRUE))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Fig$set_many(..., .purge = FALSE, .split = getOption("fig.split", TRUE))}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{...}}{Named values. Names are used as keys for provided values.}
+
+\item{\code{.purge}}{A logical determining whether to call \code{purge()} before
+saving values.}
 
 \item{\code{.split}}{A logical determining whether dots in \code{key} are treated
 specially or as is. See Details section in \code{set()}.}
@@ -370,6 +377,7 @@ specially or as is. See Details section in \code{set()}.}
 \preformatted{fig <- Fig$new()
 fig$set_many("foo" = 1, "bar" = 2)
 fig$set_many("foo.bar.baz" = 1, .split = TRUE)
+fig$set_many("foo" = "a", "baz" = 123, .purge = TRUE, .split = TRUE)
 }
 \if{html}{\out{</div>}}
 
