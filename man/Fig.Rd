@@ -4,7 +4,7 @@
 \alias{Fig}
 \alias{fig_delete}
 \alias{fig_get}
-\alias{fig_load_config}
+\alias{fig_store_list}
 \alias{fig_purge}
 \alias{fig_store}
 \alias{fig_store_many}
@@ -15,7 +15,7 @@ fig_delete(...)
 
 fig_get(key, split = getOption("fig.split", TRUE))
 
-fig_load_config(cfg, purge = FALSE, split = getOption("fig.split", TRUE))
+fig_store_list(cfg, purge = FALSE, split = getOption("fig.split", TRUE))
 
 fig_purge()
 
@@ -96,14 +96,6 @@ fig$get("bar.baz") # == 2
 fig$get("bar.baz", split = FALSE) # == 3
 
 ## ------------------------------------------------
-## Method `Fig$load_config`
-## ------------------------------------------------
-
-fig <- fig$New()
-fig$load_config(list(foo = 1, bar = 2))
-fig$load_config(list(foo = 123, baz = "abc"), TRUE)
-
-## ------------------------------------------------
 ## Method `Fig$purge`
 ## ------------------------------------------------
 
@@ -119,6 +111,14 @@ fig$store("foo", 1)
 fig$store("bar", 123)$store("baz", list(1, 2, 3))
 
 fig$store("x.y", "a", FALSE)
+
+## ------------------------------------------------
+## Method `Fig$store_list`
+## ------------------------------------------------
+
+fig <- fig$New()
+fig$store_list(list(foo = 1, bar = 2))
+fig$store_list(list(foo = 123, baz = "abc"), TRUE)
 
 ## ------------------------------------------------
 ## Method `Fig$store_many`
@@ -144,9 +144,9 @@ fig$update_env_prefix("")
 \item \href{#method-new}{\code{Fig$new()}}
 \item \href{#method-delete}{\code{Fig$delete()}}
 \item \href{#method-get}{\code{Fig$get()}}
-\item \href{#method-load_config}{\code{Fig$load_config()}}
 \item \href{#method-purge}{\code{Fig$purge()}}
 \item \href{#method-store}{\code{Fig$store()}}
+\item \href{#method-store_list}{\code{Fig$store_list()}}
 \item \href{#method-store_many}{\code{Fig$store_many()}}
 \item \href{#method-update_env_prefix}{\code{Fig$update_env_prefix()}}
 \item \href{#method-clone}{\code{Fig$clone()}}
@@ -266,38 +266,6 @@ fig$get("bar.baz", split = FALSE) # == 3
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-load_config"></a>}}
-\if{latex}{\out{\hypertarget{method-load_config}{}}}
-\subsection{Method \code{load_config()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Fig$load_config(cfg, purge = FALSE, split = getOption("fig.split", TRUE))}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{cfg}}{(Named list) Names are used as keys for provided values.}
-
-\item{\code{purge}}{A logical determining whether to call \code{purge()} before
-saving values.}
-
-\item{\code{split}}{A logical determining whether dots in \code{key} are treated
-specially or as is. See Details section in \code{store()}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{fig <- fig$New()
-fig$load_config(list(foo = 1, bar = 2))
-fig$load_config(list(foo = 123, baz = "abc"), TRUE)
-}
-\if{html}{\out{</div>}}
-
-}
-
-}
-\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-purge"></a>}}
 \if{latex}{\out{\hypertarget{method-purge}{}}}
 \subsection{Method \code{purge()}}{
@@ -350,6 +318,38 @@ fig$store("foo", 1)
 fig$store("bar", 123)$store("baz", list(1, 2, 3))
 
 fig$store("x.y", "a", FALSE)
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-store_list"></a>}}
+\if{latex}{\out{\hypertarget{method-store_list}{}}}
+\subsection{Method \code{store_list()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Fig$store_list(cfg, purge = FALSE, split = getOption("fig.split", TRUE))}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{cfg}}{(Named list) Names are used as keys for provided values.}
+
+\item{\code{purge}}{A logical determining whether to call \code{purge()} before
+saving values.}
+
+\item{\code{split}}{A logical determining whether dots in \code{key} are treated
+specially or as is. See Details section in \code{store()}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{fig <- fig$New()
+fig$store_list(list(foo = 1, bar = 2))
+fig$store_list(list(foo = 123, baz = "abc"), TRUE)
 }
 \if{html}{\out{</div>}}
 
