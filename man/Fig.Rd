@@ -4,6 +4,7 @@
 \alias{Fig}
 \alias{fig_delete}
 \alias{fig_get}
+\alias{fig_load_config}
 \alias{fig_purge}
 \alias{fig_set}
 \alias{fig_set_many}
@@ -13,6 +14,8 @@
 fig_delete(key)
 
 fig_get(key, split = getOption("fig.split", TRUE))
+
+fig_load_config(cfg, purge = FALSE, split = getOption("fig.split", TRUE))
 
 fig_purge()
 
@@ -26,7 +29,12 @@ fig_update_env_prefix(env_prefix)
 \item{key}{A key to store a value for.}
 
 \item{split}{A logical determining whether dots in \code{key} are treated
-specially or as is. See Details section.}
+specially or as is. See Details section in \code{set()}.}
+
+\item{cfg}{(Named list) Names are used as keys for provided values.}
+
+\item{purge}{A logical determining whether to call \code{purge()} before saving
+values.}
 
 \item{value}{A value to be stored.}
 
@@ -120,6 +128,7 @@ fig$update_env_prefix("")
 \item \href{#method-new}{\code{Fig$new()}}
 \item \href{#method-delete}{\code{Fig$delete()}}
 \item \href{#method-get}{\code{Fig$get()}}
+\item \href{#method-load_config}{\code{Fig$load_config()}}
 \item \href{#method-purge}{\code{Fig$purge()}}
 \item \href{#method-set}{\code{Fig$set()}}
 \item \href{#method-set_many}{\code{Fig$set_many()}}
@@ -238,6 +247,28 @@ fig$get("bar.baz", split = FALSE) # == 3
 
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-load_config"></a>}}
+\if{latex}{\out{\hypertarget{method-load_config}{}}}
+\subsection{Method \code{load_config()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Fig$load_config(cfg, purge = FALSE, split = getOption("fig.split", TRUE))}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{cfg}}{(Named list) Names are used as keys for provided values.}
+
+\item{\code{purge}}{A logical determining whether to call \code{purge()} before
+saving values.}
+
+\item{\code{split}}{A logical determining whether dots in \code{key} are treated
+specially or as is. See Details section in \code{set()}.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-purge"></a>}}
 \if{latex}{\out{\hypertarget{method-purge}{}}}
 \subsection{Method \code{purge()}}{
@@ -308,7 +339,7 @@ Set any number of values at once
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{...}}{Named values Names are used as keys for provided values.}
+\item{\code{...}}{Named values. Names are used as keys for provided values.}
 
 \item{\code{.split}}{A logical determining whether dots in \code{key} are treated
 specially or as is. See Details section in \code{set()}.}

@@ -74,6 +74,27 @@ Fig <- R6::R6Class( # nolint
       if (isTRUE(split)) private$traverse_items(key) else private$items[[key]]
     },
 
+    #' @param cfg (Named list) Names are used as keys for provided values.
+    #' @param purge A logical determining whether to call `purge()` before
+    #' saving values.
+    #' @param split A logical determining whether dots in `key` are treated
+    #' specially or as is. See Details section in `set()`.
+    load_config = function(cfg, purge = FALSE, split = getOption("fig.split", TRUE)) {
+      keys <- names(cfg)
+      stopifnot(
+        !is.null(keys),
+        all(keys != ""),
+        length(unique(keys)) == length(keys)
+      )
+      if (isTRUE(purge)) {
+        self$purge()
+      }
+      for (key in keys) {
+        self$set(key, cfg[[key]], split)
+      }
+      invisible(self)
+    },
+
     #' @description Purge stored values
     #' @examples
     #' fig <- Fig$new()
@@ -108,7 +129,7 @@ Fig <- R6::R6Class( # nolint
     },
 
     #' @description Set any number of values at once
-    #' @param ... Named values Names are used as keys for provided values.
+    #' @param ... Named values. Names are used as keys for provided values.
     #' @param .split A logical determining whether dots in `key` are treated
     #' specially or as is. See Details section in `set()`.
     #' @examples
@@ -116,17 +137,7 @@ Fig <- R6::R6Class( # nolint
     #' fig$set_many("foo" = 1, "bar" = 2)
     #' fig$set_many("foo.bar.baz" = 1, .split = TRUE)
     set_many = function(..., .split = getOption("fig.split", TRUE)) {
-      args <- list(...)
-      keys <- names(args)
-      stopifnot(
-        !is.null(keys),
-        all(keys != ""),
-        length(unique(keys)) == length(keys)
-      )
-      for (key in keys) {
-        self$set(key, args[[key]], .split)
-      }
-      invisible(self)
+      self$load_config(list(...), split = .split)
     },
 
     #' @description Update prefix for system environment variables
@@ -200,6 +211,17 @@ fig_delete <- function(key) {
 #' @export
 fig_get <- function(key, split = getOption("fig.split", TRUE)) {
   fig$get(key)
+}
+
+#' @param cfg (Named list) Names are used as keys for provided values.
+#' @param purge A logical determining whether to call `purge()` before saving
+#' values.
+#' @param split A logical determining whether dots in `key` are treated
+#' specially or as is. See Details section in `set()`.
+#' @rdname Fig
+#' @export
+fig_load_config <- function(cfg, purge = FALSE, split = getOption("fig.split", TRUE)) {
+  fig$load_config(cfg, split)
 }
 
 #' @rdname Fig
