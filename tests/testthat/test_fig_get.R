@@ -2,6 +2,7 @@ test_that("get validates key", {
   fig <- Fig$new()
   expect_error(fig$get(c("a", "b")))
   expect_error(fig$get(list(1, 2)))
+  expect_error(fig$get(""))
   expect_silent(fig$get("foo"))
 })
 

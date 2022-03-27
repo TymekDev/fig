@@ -65,7 +65,7 @@ Fig <- R6::R6Class( # nolint
     #' fig$get("bar.baz") # == 2
     #' fig$get("bar.baz", split = FALSE) # == 3
     get = function(key, split = getOption("fig.split", TRUE)) {
-      stopifnot(length(key) == 1)
+      stopifnot(length(key) == 1, nchar(key) > 0)
       env_key <- sub(".", "_", key, fixed = TRUE)
       value <- Sys.getenv(private$add_env_prefix(env_key), NA)
       if (!is.na(value)) {
