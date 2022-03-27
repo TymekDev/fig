@@ -134,14 +134,17 @@ Fig <- R6::R6Class( # nolint
 
     #' @description Set any number of values at once
     #' @param ... Named values. Names are used as keys for provided values.
+    #' @param .purge A logical determining whether to call `purge()` before
+    #' saving values.
     #' @param .split A logical determining whether dots in `key` are treated
     #' specially or as is. See Details section in `set()`.
     #' @examples
     #' fig <- Fig$new()
     #' fig$set_many("foo" = 1, "bar" = 2)
     #' fig$set_many("foo.bar.baz" = 1, .split = TRUE)
-    set_many = function(..., .split = getOption("fig.split", TRUE)) {
-      self$load_config(list(...), split = .split)
+    #' fig$set_many("foo" = "a", "baz" = 123, .purge = TRUE, .split = TRUE)
+    set_many = function(..., .purge = FALSE, .split = getOption("fig.split", TRUE)) {
+      self$load_config(list(...), .purge, .split)
     },
 
     #' @description Update prefix for system environment variables
@@ -245,12 +248,14 @@ fig_set <- function(key, value, split = getOption("fig.split", TRUE)) {
 }
 
 #' @param ... Named values. Names are used as keys for provided values.
+#' @param .purge A logical determining whether to call `purge()` before saving
+#' values.
 #' @param .split A logical determining whether dots in `key` are treated
 #' specially or as is. See Details section in `set()`.
 #' @rdname Fig
 #' @export
-fig_set_many <- function(..., .split = getOption("fig.split", TRUE)) {
-  fig$set_many(..., .split = .split)
+fig_set_many <- function(..., .purge = FALSE, .split = getOption("fig.split", TRUE)) {
+  fig$set_many(..., .purge = .purge, .split = .split)
 }
 
 #' @param env_prefix (character) A prefix to be prepended to a key before system
