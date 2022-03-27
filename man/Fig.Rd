@@ -85,12 +85,15 @@ fig <- Fig$new()
 fig$set("foo", 1)
 fig$set("bar", 123)$set("baz", list(1, 2, 3))
 
+fig$set("x.y", "a", FALSE)
+
 ## ------------------------------------------------
 ## Method `Fig$set_many`
 ## ------------------------------------------------
 
 fig <- Fig$new()
 fig$set_many("foo" = 1, "bar" = 2)
+fig$set_many("foo.bar.baz" = 1, .split = TRUE)
 
 ## ------------------------------------------------
 ## Method `Fig$update_env_prefix`
@@ -227,7 +230,7 @@ fig$get("bar.baz", split = FALSE) # == 3
 \subsection{Method \code{set()}}{
 Store a value
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Fig$set(key, value)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Fig$set(key, value, split = getOption("fig.split", TRUE))}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -236,14 +239,25 @@ Store a value
 \item{\code{key}}{A key to store a value for.}
 
 \item{\code{value}}{A value to be stored.}
+
+\item{\code{split}}{A logical determining whether dots in \code{key} are treated
+specially or as is. See Details section.}
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Details}{
+Fig treats dots in \code{key} as nest level delimiters. Therefore,
+\code{fig$set("foo.bar", 1)} is equivalent to \verb{fig$set("foo", list(bar = 1)}.
+This behavior can be disabled either by setting \code{options(fig.split = FALSE)} or by providing \code{split = FALSE} argument.
+}
+
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{fig <- Fig$new()
 fig$set("foo", 1)
 fig$set("bar", 123)$set("baz", list(1, 2, 3))
+
+fig$set("x.y", "a", FALSE)
 }
 \if{html}{\out{</div>}}
 
@@ -256,13 +270,16 @@ fig$set("bar", 123)$set("baz", list(1, 2, 3))
 \subsection{Method \code{set_many()}}{
 Set any number of values at once
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Fig$set_many(...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Fig$set_many(..., .split = getOption("fig.split", TRUE))}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{...}}{Named values Names are used as keys for provided values.}
+
+\item{\code{.split}}{A logical determining whether dots in \code{key} are treated
+specially or as is. See Details section in \code{set()}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -270,6 +287,7 @@ Set any number of values at once
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{fig <- Fig$new()
 fig$set_many("foo" = 1, "bar" = 2)
+fig$set_many("foo.bar.baz" = 1, .split = TRUE)
 }
 \if{html}{\out{</div>}}
 
