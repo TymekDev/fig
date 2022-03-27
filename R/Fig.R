@@ -79,6 +79,10 @@ Fig <- R6::R6Class( # nolint
     #' saving values.
     #' @param split A logical determining whether dots in `key` are treated
     #' specially or as is. See Details section in `set()`.
+    #' @examples
+    #' fig <- fig$New()
+    #' fig$load_config(list(foo = 1, bar = 2))
+    #' fig$load_config(list(foo = 123, baz = "abc"), TRUE)
     load_config = function(cfg, purge = FALSE, split = getOption("fig.split", TRUE)) {
       keys <- names(cfg)
       stopifnot(
@@ -210,7 +214,7 @@ fig_delete <- function(key) {
 #' @rdname Fig
 #' @export
 fig_get <- function(key, split = getOption("fig.split", TRUE)) {
-  fig$get(key)
+  fig$get(key, split)
 }
 
 #' @param cfg (Named list) Names are used as keys for provided values.
@@ -221,7 +225,7 @@ fig_get <- function(key, split = getOption("fig.split", TRUE)) {
 #' @rdname Fig
 #' @export
 fig_load_config <- function(cfg, purge = FALSE, split = getOption("fig.split", TRUE)) {
-  fig$load_config(cfg, split)
+  fig$load_config(cfg, purge, split)
 }
 
 #' @rdname Fig
@@ -232,22 +236,25 @@ fig_purge <- function() {
 
 #' @param key A key to store a value for.
 #' @param value A value to be stored.
+#' @param split A logical determining whether dots in `key` are treated
+#' specially or as is. See Details section.
 #' @rdname Fig
 #' @export
-fig_set <- function(key, value) {
-  fig$set(key, value)
+fig_set <- function(key, value, split = getOption("fig.split", TRUE)) {
+  fig$set(key, value, split)
 }
 
-#' @description Set any number of values at once
-#' @param ... Named values Names are used as keys for provided values.
+#' @param ... Named values. Names are used as keys for provided values.
+#' @param .split A logical determining whether dots in `key` are treated
+#' specially or as is. See Details section in `set()`.
 #' @rdname Fig
 #' @export
-fig_set_many <- function(...) {
-  fig$set_many(...)
+fig_set_many <- function(..., .split = getOption("fig.split", TRUE)) {
+  fig$set_many(..., .split = .split)
 }
 
 #' @param env_prefix (character) A prefix to be prepended to a key before system
-#' environment lookup.
+#' environment lookup. Pass an empty string to reset.
 #' @rdname Fig
 #' @export
 fig_update_env_prefix <- function(env_prefix) {
