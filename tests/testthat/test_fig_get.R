@@ -36,7 +36,7 @@ test_that("get environment lookup works with YAML key notation", {
 test_that("get split argument works", {
   fig <- Fig$new()
   fig$set("foo", list(bar = 1))
-  fig$set("foo.bar", 2)
+  fig$set("foo.bar", 2, FALSE)
   expect_equal(fig$get("foo.bar"), 1)
   expect_equal(fig$get("foo.bar", FALSE), 2)
 })
@@ -44,7 +44,7 @@ test_that("get split argument works", {
 test_that("fig.split option works", {
   fig <- Fig$new()
   fig$set("foo", list(bar = 1))
-  fig$set("foo.bar", 2)
+  fig$set("foo.bar", 2, FALSE)
   expect_equal(fig$get("foo.bar"), 1)
   with_options(list(fig.split = FALSE), expect_equal(fig$get("foo.bar"), 2))
 })

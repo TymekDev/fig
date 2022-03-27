@@ -75,23 +75,38 @@ Fig <- R6::R6Class( # nolint
     },
 
     #' @description Store a value
+    #' @details Fig treats dots in `key` as nest level delimiters. Therefore,
+    #' `fig$set("foo.bar", 1)` is equivalent to `fig$set("foo", list(bar = 1)`.
+    #' This behavior can be disabled either by setting `options(fig.split =
+    #' FALSE)` or by providing `split = FALSE` argument.
+    #' @param split A logical determining whether dots in `key` are treated
+    #' specially or as is. See Details section.
     #' @param key A key to store a value for.
     #' @param value A value to be stored.
     #' @examples
     #' fig <- Fig$new()
     #' fig$set("foo", 1)
     #' fig$set("bar", 123)$set("baz", list(1, 2, 3))
-    set = function(key, value) {
-      private$items[[key]] <- value
+    #'
+    #' fig$set("x.y", "a", FALSE)
+    set = function(key, value, split = getOption("fig.split", TRUE)) {
+      if (isTRUE(split)) {
+        private$insert_value(key, value)
+      } else {
+        private$items[[key]] <- value
+      }
       invisible(self)
     },
 
     #' @description Set any number of values at once
     #' @param ... Named values Names are used as keys for provided values.
+    #' @param .split A logical determining whether dots in `key` are treated
+    #' specially or as is. See Details section in `set()`.
     #' @examples
     #' fig <- Fig$new()
     #' fig$set_many("foo" = 1, "bar" = 2)
-    set_many = function(...) {
+    #' fig$set_many("foo.bar.baz" = 1, .split = TRUE)
+    set_many = function(..., .split = getOption("fig.split", TRUE)) {
       args <- list(...)
       keys <- names(args)
       stopifnot(
@@ -100,7 +115,7 @@ Fig <- R6::R6Class( # nolint
         length(unique(keys)) == length(keys)
       )
       for (key in keys) {
-        self$set(key, args[[key]])
+        self$set(key, args[[key]], .split)
       }
       invisible(self)
     },
@@ -128,6 +143,26 @@ Fig <- R6::R6Class( # nolint
   private = list(
     add_env_prefix = NULL,
     items = NULL,
+    insert_value = function(key, value) {
+      keys <- strsplit(key, ".", TRUE)[[1]]
+      n_keys <- length(keys)
+      # Descend recursively through keys. Insert value at the end of this chain.
+      descend <- function(l, lvl = 1) {
+        key <- keys[[lvl]]
+        if (lvl < n_keys) {
+          l[[key]] <- descend(l[[key]], lvl + 1)
+        } else {
+          # In case key has to be added next to a single value. With check
+          # against private$items to not convert it.
+          if (!identical(private$items, l) && !is.list(l)) {
+            l <- as.list(l)
+          }
+          l[[key]] <- value
+        }
+        l
+      }
+      private$items <- descend(private$items)
+    },
     traverse_items = function(key) {
       value <- private$items
       for (key_part in strsplit(key, ".", TRUE)[[1]]) {

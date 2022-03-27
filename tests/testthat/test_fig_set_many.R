@@ -20,6 +20,12 @@ test_that("set_many works", {
   expect_identical(fig$get("baz"), l)
 })
 
+test_that("set_many works with YAML key notation", {
+  fig <- Fig$new()
+  fig$set_many("foo.bar" = 1, "foo.bar.baz" = 2)
+  expect_equal(fig$get("foo.bar"), list(1, baz = 2))
+})
+
 test_that("fig_set_many works", {
   env <- new.env()
   l <- list()

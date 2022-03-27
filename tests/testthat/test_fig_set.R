@@ -18,6 +18,24 @@ test_that("set works", {
   expect_identical(fig$get("foo"), l)
 })
 
+test_that("set works with YAML key notation", {
+  fig <- Fig$new()
+
+  fig$set("foo.bar", 1)
+  expect_equal(fig$get("foo"), list(bar = 1))
+  expect_equal(fig$get("foo.bar"), 1)
+
+  fig$set("foo.bar.baz", 2)
+  expect_equal(fig$get("foo.bar"), list(1, baz = 2))
+
+  fig$set("foo.bar.xyz", 3)
+  expect_equal(fig$get("foo.bar"), list(1, baz = 2, xyz = 3))
+
+  fig$set("foo.bar", 4)
+  expect_equal(fig$get("foo"), list(bar = 4))
+  expect_equal(fig$get("foo.bar"), 4)
+})
+
 test_that("fig_set works", {
   fig_set("foo", 1)
   expect_equal(fig_get("foo"), 1)
