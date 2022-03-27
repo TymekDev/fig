@@ -6,7 +6,7 @@
 \alias{fig_delete}
 \alias{fig_get}
 \alias{fig_store_list}
-\alias{fig_purge}
+\alias{fig_delete_all}
 \alias{fig_store}
 \alias{fig_store_many}
 \title{Create a Fig to Store Config}
@@ -17,13 +17,13 @@ fig_delete(...)
 
 fig_get(key, split = getOption("fig.split", TRUE))
 
-fig_store_list(cfg, purge = FALSE, split = getOption("fig.split", TRUE))
+fig_store_list(cfg, delete_all = FALSE, split = getOption("fig.split", TRUE))
 
-fig_purge()
+fig_delete_all()
 
 fig_store(key, value, split = getOption("fig.split", TRUE))
 
-fig_store_many(..., .purge = FALSE, .split = getOption("fig.split", TRUE))
+fig_store_many(..., .delete_all = FALSE, .split = getOption("fig.split", TRUE))
 }
 \arguments{
 \item{env_prefix}{(character) A prefix to be prepended to a key before system
@@ -38,12 +38,12 @@ specially or as is. See Details section.}
 
 \item{cfg}{(Named list) Names are used as keys for provided values.}
 
-\item{purge}{A logical determining whether to call \code{purge()} before saving
+\item{delete_all}{A logical determining whether to call \code{delete_all()} before saving
 values.}
 
 \item{value}{A value to be stored.}
 
-\item{.purge}{A logical determining whether to call \code{purge()} before saving
+\item{.delete_all}{A logical determining whether to call \code{delete_all()} before saving
 values.}
 
 \item{.split}{A logical determining whether dots in \code{key} are treated
@@ -103,13 +103,6 @@ fig$get("bar.baz") # == 2
 fig$get("bar.baz", split = FALSE) # == 3
 
 ## ------------------------------------------------
-## Method `Fig$purge`
-## ------------------------------------------------
-
-fig <- Fig$new()
-fig$store("a", 1)$purge()$get("a") # == NULL
-
-## ------------------------------------------------
 ## Method `Fig$store`
 ## ------------------------------------------------
 
@@ -134,7 +127,7 @@ fig$store_list(list(foo = 123, baz = "abc"), TRUE)
 fig <- Fig$new()
 fig$store_many("foo" = 1, "bar" = 2)
 fig$store_many("foo.bar.baz" = 1, .split = TRUE)
-fig$store_many("foo" = "a", "baz" = 123, .purge = TRUE, .split = TRUE)
+fig$store_many("foo" = "a", "baz" = 123, .delete_all = TRUE, .split = TRUE)
 }
 \section{Methods}{
 \subsection{Public methods}{
@@ -142,8 +135,8 @@ fig$store_many("foo" = "a", "baz" = 123, .purge = TRUE, .split = TRUE)
 \item \href{#method-new}{\code{Fig$new()}}
 \item \href{#method-configure}{\code{Fig$configure()}}
 \item \href{#method-delete}{\code{Fig$delete()}}
+\item \href{#method-delete_all}{\code{Fig$delete_all()}}
 \item \href{#method-get}{\code{Fig$get()}}
-\item \href{#method-purge}{\code{Fig$purge()}}
 \item \href{#method-store}{\code{Fig$store()}}
 \item \href{#method-store_list}{\code{Fig$store_list()}}
 \item \href{#method-store_many}{\code{Fig$store_many()}}
@@ -237,6 +230,15 @@ fig$get("baz") # == NULL
 
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-delete_all"></a>}}
+\if{latex}{\out{\hypertarget{method-delete_all}{}}}
+\subsection{Method \code{delete_all()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Fig$delete_all()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get"></a>}}
 \if{latex}{\out{\hypertarget{method-get}{}}}
 \subsection{Method \code{get()}}{
@@ -291,25 +293,6 @@ fig$get("bar.baz", split = FALSE) # == 3
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-purge"></a>}}
-\if{latex}{\out{\hypertarget{method-purge}{}}}
-\subsection{Method \code{purge()}}{
-Purge stored values
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Fig$purge()}\if{html}{\out{</div>}}
-}
-
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{fig <- Fig$new()
-fig$store("a", 1)$purge()$get("a") # == NULL
-}
-\if{html}{\out{</div>}}
-
-}
-
-}
-\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-store"></a>}}
 \if{latex}{\out{\hypertarget{method-store}{}}}
 \subsection{Method \code{store()}}{
@@ -354,7 +337,7 @@ fig$store("x.y", "a", FALSE)
 \if{latex}{\out{\hypertarget{method-store_list}{}}}
 \subsection{Method \code{store_list()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Fig$store_list(cfg, purge = FALSE, split = getOption("fig.split", TRUE))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Fig$store_list(cfg, delete_all = FALSE, split = getOption("fig.split", TRUE))}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -362,7 +345,7 @@ fig$store("x.y", "a", FALSE)
 \describe{
 \item{\code{cfg}}{(Named list) Names are used as keys for provided values.}
 
-\item{\code{purge}}{A logical determining whether to call \code{purge()} before
+\item{\code{delete_all}}{A logical determining whether to call \code{delete_all()} before
 saving values.}
 
 \item{\code{split}}{A logical determining whether dots in \code{key} are treated
@@ -387,7 +370,7 @@ fig$store_list(list(foo = 123, baz = "abc"), TRUE)
 \subsection{Method \code{store_many()}}{
 Set any number of values at once
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Fig$store_many(..., .purge = FALSE, .split = getOption("fig.split", TRUE))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Fig$store_many(..., .delete_all = FALSE, .split = getOption("fig.split", TRUE))}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -395,7 +378,7 @@ Set any number of values at once
 \describe{
 \item{\code{...}}{Named values. Names are used as keys for provided values.}
 
-\item{\code{.purge}}{A logical determining whether to call \code{purge()} before
+\item{\code{.delete_all}}{A logical determining whether to call \code{delete_all()} before
 saving values.}
 
 \item{\code{.split}}{A logical determining whether dots in \code{key} are treated
@@ -408,7 +391,7 @@ specially or as is. See Details section in \code{store()}.}
 \preformatted{fig <- Fig$new()
 fig$store_many("foo" = 1, "bar" = 2)
 fig$store_many("foo.bar.baz" = 1, .split = TRUE)
-fig$store_many("foo" = "a", "baz" = 123, .purge = TRUE, .split = TRUE)
+fig$store_many("foo" = "a", "baz" = 123, .delete_all = TRUE, .split = TRUE)
 }
 \if{html}{\out{</div>}}
 

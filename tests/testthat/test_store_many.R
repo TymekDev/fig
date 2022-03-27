@@ -33,7 +33,7 @@ test_that("fig_store_many works", {
   expect_equal(fig_get("foo"), 1)
   expect_identical(fig_get("bar"), env)
   expect_identical(fig_get("baz"), l)
-  fig_purge()
+  fig_delete_all()
 })
 
 test_that("fig_store_many shares store_many arguments", {

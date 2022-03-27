@@ -22,7 +22,7 @@ test_that("fig_configure works for env_prefix", {
   fig_configure(env_prefix = "foo_")
   with_envvar(list(foo_bar = "a"), expect_equal(fig_get("bar"), "a"))
   expect_equal(fig_get("bar"), NULL)
-  fig_purge()
+  fig_delete_all()
 })
 
 test_that("fig_configure shares configure arguments", {
