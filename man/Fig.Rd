@@ -72,10 +72,13 @@ fig <- Fig$new("RCONNECT_")
 ## ------------------------------------------------
 
 fig <- Fig$new()
-fig$set("foo", 1)
+fig$set("foo", 1)$set("bar", 2)$set("baz", 3)
 fig$get("foo") # == 1
 fig$delete("foo")
 fig$get("foo") # == NULL
+fig$delete("bar", "baz")
+fig$get("bar") # == NULL
+fig$get("baz") # == NULL
 
 ## ------------------------------------------------
 ## Method `Fig$get`
@@ -182,23 +185,26 @@ fig <- Fig$new("RCONNECT_")
 \subsection{Method \code{delete()}}{
 Delete a stored value
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Fig$delete(key)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Fig$delete(...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{key}}{A key to delete its corresponding value.}
+\item{\code{...}}{Keys to delete their corresponding values.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{fig <- Fig$new()
-fig$set("foo", 1)
+fig$set("foo", 1)$set("bar", 2)$set("baz", 3)
 fig$get("foo") # == 1
 fig$delete("foo")
 fig$get("foo") # == NULL
+fig$delete("bar", "baz")
+fig$get("bar") # == NULL
+fig$get("baz") # == NULL
 }
 \if{html}{\out{</div>}}
 
