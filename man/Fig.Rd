@@ -7,6 +7,7 @@
 \alias{fig_delete_all}
 \alias{fig_get}
 \alias{fig_get_many}
+\alias{fig_get_all}
 \alias{fig_store_list}
 \alias{fig_store}
 \alias{fig_store_many}
@@ -21,6 +22,8 @@ fig_delete_all()
 fig_get(key, split = getOption("fig.split", TRUE))
 
 fig_get_many(..., .split = getOption("fig.split", TRUE))
+
+fig_get_all()
 
 fig_store_list(l, split = getOption("fig.split", TRUE))
 
@@ -51,6 +54,8 @@ refer to \code{Fig} class methods documentation.
 Fig provides a set of exported functions. This makes \code{Fig} class instance
 creation optional, and makes the package itself mimic being a class instance.
 Those functions are wrappers on an internal \code{Fig} object.
+
+Retrieve All Stored Values
 }
 \examples{
 
@@ -129,6 +134,7 @@ fig$store_many("foo" = "a", "baz" = 123, .split = FALSE)
 \item \href{#method-delete_all}{\code{Fig$delete_all()}}
 \item \href{#method-get}{\code{Fig$get()}}
 \item \href{#method-get_many}{\code{Fig$get_many()}}
+\item \href{#method-get_all}{\code{Fig$get_all()}}
 \item \href{#method-store}{\code{Fig$store()}}
 \item \href{#method-store_list}{\code{Fig$store_list()}}
 \item \href{#method-store_many}{\code{Fig$store_many()}}
@@ -310,6 +316,16 @@ specially or as is. See Details section in \code{get()}.}
 }
 \if{html}{\out{</div>}}
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_all"></a>}}
+\if{latex}{\out{\hypertarget{method-get_all}{}}}
+\subsection{Method \code{get_all()}}{
+Retrieve All Stored Values
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Fig$get_all()}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-store"></a>}}
