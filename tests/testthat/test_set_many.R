@@ -35,3 +35,7 @@ test_that("fig_set_many works", {
   expect_identical(fig_get("baz"), l)
   fig_purge()
 })
+
+test_that("fig_set_many shares set_many arguments", {
+  expect_equal(formalArgs(fig_set_many), formalArgs(Fig$new()$set_many))
+})

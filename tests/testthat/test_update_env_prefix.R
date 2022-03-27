@@ -24,3 +24,10 @@ test_that("fig_update_env_prefix works", {
   expect_equal(fig_get("bar"), NULL)
   fig_purge()
 })
+
+test_that("fig_update_env_prefix shares update_env_prefix arguments", {
+  expect_equal(
+    formalArgs(fig_update_env_prefix),
+    formalArgs(Fig$new()$update_env_prefix)
+  )
+})
