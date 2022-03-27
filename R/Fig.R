@@ -27,7 +27,7 @@ Fig <- R6::R6Class( # nolint
     #' @param ... Keys to delete values for.
     #' @examples
     #' fig <- Fig$new()
-    #' fig$set("foo", 1)$set("bar", 2)$set("baz", 3)
+    #' fig$store("foo", 1)$store("bar", 2)$store("baz", 3)
     #' fig$get("foo") # == 1
     #' fig$delete("foo")
     #' fig$get("foo") # == NULL
@@ -58,13 +58,13 @@ Fig <- R6::R6Class( # nolint
     #' specially or as is. See Details section.
     #' @examples
     #' fig <- Fig$new()
-    #' fig$set("foo", 1)
+    #' fig$store("foo", 1)
     #' fig$get("foo")
     #'
-    #' fig$set("bar", list(baz = 2))
+    #' fig$store("bar", list(baz = 2))
     #' fig$get("bar.baz")
     #'
-    #' fig$set("bar.baz", 3)
+    #' fig$store("bar.baz", 3)
     #' fig$get("bar.baz") # == 2
     #' fig$get("bar.baz", split = FALSE) # == 3
     get = function(key, split = getOption("fig.split", TRUE)) {
@@ -81,7 +81,7 @@ Fig <- R6::R6Class( # nolint
     #' @param purge A logical determining whether to call `purge()` before
     #' saving values.
     #' @param split A logical determining whether dots in `key` are treated
-    #' specially or as is. See Details section in `set()`.
+    #' specially or as is. See Details section in `store()`.
     #' @examples
     #' fig <- fig$New()
     #' fig$load_config(list(foo = 1, bar = 2))
@@ -97,7 +97,7 @@ Fig <- R6::R6Class( # nolint
         self$purge()
       }
       for (key in keys) {
-        self$set(key, cfg[[key]], split)
+        self$store(key, cfg[[key]], split)
       }
       invisible(self)
     },
@@ -105,7 +105,7 @@ Fig <- R6::R6Class( # nolint
     #' @description Purge stored values
     #' @examples
     #' fig <- Fig$new()
-    #' fig$set("a", 1)$purge()$get("a") # == NULL
+    #' fig$store("a", 1)$purge()$get("a") # == NULL
     purge = function() {
       private$items <- new.env()
       invisible(self)
@@ -113,7 +113,7 @@ Fig <- R6::R6Class( # nolint
 
     #' @description Store a value
     #' @details Fig treats dots in `key` as nest level delimiters. Therefore,
-    #' `fig$set("foo.bar", 1)` is equivalent to `fig$set("foo", list(bar = 1)`.
+    #' `fig$store("foo.bar", 1)` is equivalent to `fig$store("foo", list(bar = 1)`.
     #' This behavior can be disabled either by setting `options(fig.split =
     #' FALSE)` or by providing `split = FALSE` argument.
     #' @param split A logical determining whether dots in `key` are treated
@@ -122,11 +122,11 @@ Fig <- R6::R6Class( # nolint
     #' @param value A value to be stored.
     #' @examples
     #' fig <- Fig$new()
-    #' fig$set("foo", 1)
-    #' fig$set("bar", 123)$set("baz", list(1, 2, 3))
+    #' fig$store("foo", 1)
+    #' fig$store("bar", 123)$store("baz", list(1, 2, 3))
     #'
-    #' fig$set("x.y", "a", FALSE)
-    set = function(key, value, split = getOption("fig.split", TRUE)) {
+    #' fig$store("x.y", "a", FALSE)
+    store = function(key, value, split = getOption("fig.split", TRUE)) {
       if (isTRUE(split)) {
         private$insert_value(key, value)
       } else {
@@ -140,13 +140,13 @@ Fig <- R6::R6Class( # nolint
     #' @param .purge A logical determining whether to call `purge()` before
     #' saving values.
     #' @param .split A logical determining whether dots in `key` are treated
-    #' specially or as is. See Details section in `set()`.
+    #' specially or as is. See Details section in `store()`.
     #' @examples
     #' fig <- Fig$new()
-    #' fig$set_many("foo" = 1, "bar" = 2)
-    #' fig$set_many("foo.bar.baz" = 1, .split = TRUE)
-    #' fig$set_many("foo" = "a", "baz" = 123, .purge = TRUE, .split = TRUE)
-    set_many = function(..., .purge = FALSE, .split = getOption("fig.split", TRUE)) {
+    #' fig$store_many("foo" = 1, "bar" = 2)
+    #' fig$store_many("foo.bar.baz" = 1, .split = TRUE)
+    #' fig$store_many("foo" = "a", "baz" = 123, .purge = TRUE, .split = TRUE)
+    store_many = function(..., .purge = FALSE, .split = getOption("fig.split", TRUE)) {
       self$load_config(list(...), .purge, .split)
     },
 
@@ -227,7 +227,7 @@ fig_get <- function(key, split = getOption("fig.split", TRUE)) {
 #' @param purge A logical determining whether to call `purge()` before saving
 #' values.
 #' @param split A logical determining whether dots in `key` are treated
-#' specially or as is. See Details section in `set()`.
+#' specially or as is. See Details section in `store()`.
 #' @rdname Fig
 #' @export
 fig_load_config <- function(cfg, purge = FALSE, split = getOption("fig.split", TRUE)) {
@@ -246,19 +246,19 @@ fig_purge <- function() {
 #' specially or as is. See Details section.
 #' @rdname Fig
 #' @export
-fig_set <- function(key, value, split = getOption("fig.split", TRUE)) {
-  fig$set(key, value, split)
+fig_store <- function(key, value, split = getOption("fig.split", TRUE)) {
+  fig$store(key, value, split)
 }
 
 #' @param ... Named values. Names are used as keys for provided values.
 #' @param .purge A logical determining whether to call `purge()` before saving
 #' values.
 #' @param .split A logical determining whether dots in `key` are treated
-#' specially or as is. See Details section in `set()`.
+#' specially or as is. See Details section in `store()`.
 #' @rdname Fig
 #' @export
-fig_set_many <- function(..., .purge = FALSE, .split = getOption("fig.split", TRUE)) {
-  fig$set_many(..., .purge = .purge, .split = .split)
+fig_store_many <- function(..., .purge = FALSE, .split = getOption("fig.split", TRUE)) {
+  fig$store_many(..., .purge = .purge, .split = .split)
 }
 
 #' @param env_prefix (character) A prefix to be prepended to a key before system

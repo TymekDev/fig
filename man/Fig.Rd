@@ -6,12 +6,12 @@
 \alias{fig_get}
 \alias{fig_load_config}
 \alias{fig_purge}
-\alias{fig_set}
-\alias{fig_set_many}
+\alias{fig_store}
+\alias{fig_store_many}
 \alias{fig_update_env_prefix}
 \title{Create a Fig to Store Config}
 \usage{
-fig_delete(key)
+fig_delete(...)
 
 fig_get(key, split = getOption("fig.split", TRUE))
 
@@ -19,13 +19,15 @@ fig_load_config(cfg, purge = FALSE, split = getOption("fig.split", TRUE))
 
 fig_purge()
 
-fig_set(key, value, split = getOption("fig.split", TRUE))
+fig_store(key, value, split = getOption("fig.split", TRUE))
 
-fig_set_many(..., .purge = FALSE, .split = getOption("fig.split", TRUE))
+fig_store_many(..., .purge = FALSE, .split = getOption("fig.split", TRUE))
 
 fig_update_env_prefix(env_prefix)
 }
 \arguments{
+\item{...}{Named values. Names are used as keys for provided values.}
+
 \item{key}{A key to store a value for.}
 
 \item{split}{A logical determining whether dots in \code{key} are treated
@@ -38,13 +40,11 @@ values.}
 
 \item{value}{A value to be stored.}
 
-\item{...}{Named values. Names are used as keys for provided values.}
-
 \item{.purge}{A logical determining whether to call \code{purge()} before saving
 values.}
 
 \item{.split}{A logical determining whether dots in \code{key} are treated
-specially or as is. See Details section in \code{set()}.}
+specially or as is. See Details section in \code{store()}.}
 
 \item{env_prefix}{(character) A prefix to be prepended to a key before system
 environment lookup. Pass an empty string to reset.}
@@ -72,7 +72,7 @@ fig <- Fig$new("RCONNECT_")
 ## ------------------------------------------------
 
 fig <- Fig$new()
-fig$set("foo", 1)$set("bar", 2)$set("baz", 3)
+fig$store("foo", 1)$store("bar", 2)$store("baz", 3)
 fig$get("foo") # == 1
 fig$delete("foo")
 fig$get("foo") # == NULL
@@ -85,13 +85,13 @@ fig$get("baz") # == NULL
 ## ------------------------------------------------
 
 fig <- Fig$new()
-fig$set("foo", 1)
+fig$store("foo", 1)
 fig$get("foo")
 
-fig$set("bar", list(baz = 2))
+fig$store("bar", list(baz = 2))
 fig$get("bar.baz")
 
-fig$set("bar.baz", 3)
+fig$store("bar.baz", 3)
 fig$get("bar.baz") # == 2
 fig$get("bar.baz", split = FALSE) # == 3
 
@@ -108,26 +108,26 @@ fig$load_config(list(foo = 123, baz = "abc"), TRUE)
 ## ------------------------------------------------
 
 fig <- Fig$new()
-fig$set("a", 1)$purge()$get("a") # == NULL
+fig$store("a", 1)$purge()$get("a") # == NULL
 
 ## ------------------------------------------------
-## Method `Fig$set`
-## ------------------------------------------------
-
-fig <- Fig$new()
-fig$set("foo", 1)
-fig$set("bar", 123)$set("baz", list(1, 2, 3))
-
-fig$set("x.y", "a", FALSE)
-
-## ------------------------------------------------
-## Method `Fig$set_many`
+## Method `Fig$store`
 ## ------------------------------------------------
 
 fig <- Fig$new()
-fig$set_many("foo" = 1, "bar" = 2)
-fig$set_many("foo.bar.baz" = 1, .split = TRUE)
-fig$set_many("foo" = "a", "baz" = 123, .purge = TRUE, .split = TRUE)
+fig$store("foo", 1)
+fig$store("bar", 123)$store("baz", list(1, 2, 3))
+
+fig$store("x.y", "a", FALSE)
+
+## ------------------------------------------------
+## Method `Fig$store_many`
+## ------------------------------------------------
+
+fig <- Fig$new()
+fig$store_many("foo" = 1, "bar" = 2)
+fig$store_many("foo.bar.baz" = 1, .split = TRUE)
+fig$store_many("foo" = "a", "baz" = 123, .purge = TRUE, .split = TRUE)
 
 ## ------------------------------------------------
 ## Method `Fig$update_env_prefix`
@@ -146,8 +146,8 @@ fig$update_env_prefix("")
 \item \href{#method-get}{\code{Fig$get()}}
 \item \href{#method-load_config}{\code{Fig$load_config()}}
 \item \href{#method-purge}{\code{Fig$purge()}}
-\item \href{#method-set}{\code{Fig$set()}}
-\item \href{#method-set_many}{\code{Fig$set_many()}}
+\item \href{#method-store}{\code{Fig$store()}}
+\item \href{#method-store_many}{\code{Fig$store_many()}}
 \item \href{#method-update_env_prefix}{\code{Fig$update_env_prefix()}}
 \item \href{#method-clone}{\code{Fig$clone()}}
 }
@@ -183,7 +183,7 @@ fig <- Fig$new("RCONNECT_")
 \if{html}{\out{<a id="method-delete"></a>}}
 \if{latex}{\out{\hypertarget{method-delete}{}}}
 \subsection{Method \code{delete()}}{
-Delete a stored value
+Delete stored values
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Fig$delete(...)}\if{html}{\out{</div>}}
 }
@@ -191,14 +191,14 @@ Delete a stored value
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{...}}{Keys to delete their corresponding values.}
+\item{\code{...}}{Keys to delete values for.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{fig <- Fig$new()
-fig$set("foo", 1)$set("bar", 2)$set("baz", 3)
+fig$store("foo", 1)$store("bar", 2)$store("baz", 3)
 fig$get("foo") # == 1
 fig$delete("foo")
 fig$get("foo") # == NULL
@@ -250,13 +250,13 @@ This behavior can be disabled either by setting \code{options(fig.split = FALSE)
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{fig <- Fig$new()
-fig$set("foo", 1)
+fig$store("foo", 1)
 fig$get("foo")
 
-fig$set("bar", list(baz = 2))
+fig$store("bar", list(baz = 2))
 fig$get("bar.baz")
 
-fig$set("bar.baz", 3)
+fig$store("bar.baz", 3)
 fig$get("bar.baz") # == 2
 fig$get("bar.baz", split = FALSE) # == 3
 }
@@ -282,7 +282,7 @@ fig$get("bar.baz", split = FALSE) # == 3
 saving values.}
 
 \item{\code{split}}{A logical determining whether dots in \code{key} are treated
-specially or as is. See Details section in \code{set()}.}
+specially or as is. See Details section in \code{store()}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -309,7 +309,7 @@ Purge stored values
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{fig <- Fig$new()
-fig$set("a", 1)$purge()$get("a") # == NULL
+fig$store("a", 1)$purge()$get("a") # == NULL
 }
 \if{html}{\out{</div>}}
 
@@ -317,12 +317,12 @@ fig$set("a", 1)$purge()$get("a") # == NULL
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-set"></a>}}
-\if{latex}{\out{\hypertarget{method-set}{}}}
-\subsection{Method \code{set()}}{
+\if{html}{\out{<a id="method-store"></a>}}
+\if{latex}{\out{\hypertarget{method-store}{}}}
+\subsection{Method \code{store()}}{
 Store a value
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Fig$set(key, value, split = getOption("fig.split", TRUE))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Fig$store(key, value, split = getOption("fig.split", TRUE))}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -339,17 +339,17 @@ specially or as is. See Details section.}
 }
 \subsection{Details}{
 Fig treats dots in \code{key} as nest level delimiters. Therefore,
-\code{fig$set("foo.bar", 1)} is equivalent to \verb{fig$set("foo", list(bar = 1)}.
+\code{fig$store("foo.bar", 1)} is equivalent to \verb{fig$store("foo", list(bar = 1)}.
 This behavior can be disabled either by setting \code{options(fig.split = FALSE)} or by providing \code{split = FALSE} argument.
 }
 
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{fig <- Fig$new()
-fig$set("foo", 1)
-fig$set("bar", 123)$set("baz", list(1, 2, 3))
+fig$store("foo", 1)
+fig$store("bar", 123)$store("baz", list(1, 2, 3))
 
-fig$set("x.y", "a", FALSE)
+fig$store("x.y", "a", FALSE)
 }
 \if{html}{\out{</div>}}
 
@@ -357,12 +357,12 @@ fig$set("x.y", "a", FALSE)
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-set_many"></a>}}
-\if{latex}{\out{\hypertarget{method-set_many}{}}}
-\subsection{Method \code{set_many()}}{
+\if{html}{\out{<a id="method-store_many"></a>}}
+\if{latex}{\out{\hypertarget{method-store_many}{}}}
+\subsection{Method \code{store_many()}}{
 Set any number of values at once
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Fig$set_many(..., .purge = FALSE, .split = getOption("fig.split", TRUE))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Fig$store_many(..., .purge = FALSE, .split = getOption("fig.split", TRUE))}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -374,16 +374,16 @@ Set any number of values at once
 saving values.}
 
 \item{\code{.split}}{A logical determining whether dots in \code{key} are treated
-specially or as is. See Details section in \code{set()}.}
+specially or as is. See Details section in \code{store()}.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{fig <- Fig$new()
-fig$set_many("foo" = 1, "bar" = 2)
-fig$set_many("foo.bar.baz" = 1, .split = TRUE)
-fig$set_many("foo" = "a", "baz" = 123, .purge = TRUE, .split = TRUE)
+fig$store_many("foo" = 1, "bar" = 2)
+fig$store_many("foo.bar.baz" = 1, .split = TRUE)
+fig$store_many("foo" = "a", "baz" = 123, .purge = TRUE, .split = TRUE)
 }
 \if{html}{\out{</div>}}
 
