@@ -48,5 +48,5 @@ test_that("fig_set works", {
   fig_set("foo", l)
   expect_identical(fig_get("foo"), l)
 
-  purge()
+  fig_purge()
 })

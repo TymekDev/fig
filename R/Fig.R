@@ -74,6 +74,15 @@ Fig <- R6::R6Class( # nolint
       if (isTRUE(split)) private$traverse_items(key) else private$items[[key]]
     },
 
+    #' @description Purge stored values
+    #' @examples
+    #' fig <- Fig$new()
+    #' fig$set("a", 1)$purge()$get("a") # == NULL
+    purge = function() {
+      private$items <- new.env()
+      invisible(self)
+    },
+
     #' @description Store a value
     #' @details Fig treats dots in `key` as nest level delimiters. Therefore,
     #' `fig$set("foo.bar", 1)` is equivalent to `fig$set("foo", list(bar = 1)`.
@@ -177,7 +186,7 @@ Fig <- R6::R6Class( # nolint
 #' @rdname Fig
 #' @export
 fig_delete <- function(key) {
-  global_fig()$delete(key)
+  fig$delete(key)
 }
 
 #' @param key A key to retrieve its corresponding value.
@@ -186,7 +195,13 @@ fig_delete <- function(key) {
 #' @rdname Fig
 #' @export
 fig_get <- function(key, split = getOption("fig.split", TRUE)) {
-  global_fig()$get(key)
+  fig$get(key)
+}
+
+#' @rdname Fig
+#' @export
+fig_purge <- function() {
+  fig$purge()
 }
 
 #' @param key A key to store a value for.
@@ -194,7 +209,7 @@ fig_get <- function(key, split = getOption("fig.split", TRUE)) {
 #' @rdname Fig
 #' @export
 fig_set <- function(key, value) {
-  global_fig()$set(key, value)
+  fig$set(key, value)
 }
 
 #' @description Set any number of values at once
@@ -202,7 +217,7 @@ fig_set <- function(key, value) {
 #' @rdname Fig
 #' @export
 fig_set_many <- function(...) {
-  global_fig()$set_many(...)
+  fig$set_many(...)
 }
 
 #' @param env_prefix (character) A prefix to be prepended to a key before system
@@ -210,5 +225,7 @@ fig_set_many <- function(...) {
 #' @rdname Fig
 #' @export
 fig_update_env_prefix <- function(env_prefix) {
-  global_fig()$update_env_prefix(env_prefix)
+  fig$update_env_prefix(env_prefix)
 }
+
+fig <- Fig$new()

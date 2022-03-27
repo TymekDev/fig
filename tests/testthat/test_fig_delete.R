@@ -12,5 +12,5 @@ test_that("fig_delete works", {
   fig_set("foo", 1)
   fig_delete("foo")
   expect_equal(fig_get("foo"), NULL)
-  purge()
+  fig_purge()
 })
