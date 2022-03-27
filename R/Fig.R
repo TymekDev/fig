@@ -23,16 +23,19 @@ Fig <- R6::R6Class( # nolint
       private$items <- new.env()
     },
 
-    #' @description Delete a stored value
-    #' @param key A key to delete its corresponding value.
+    #' @description Delete stored values
+    #' @param ... Keys to delete values for.
     #' @examples
     #' fig <- Fig$new()
-    #' fig$set("foo", 1)
+    #' fig$set("foo", 1)$set("bar", 2)$set("baz", 3)
     #' fig$get("foo") # == 1
     #' fig$delete("foo")
     #' fig$get("foo") # == NULL
-    delete = function(key) {
-      rm(list = key, envir = private$items)
+    #' fig$delete("bar", "baz")
+    #' fig$get("bar") # == NULL
+    #' fig$get("baz") # == NULL
+    delete = function(...) {
+      rm(list = c(...), envir = private$items)
       invisible(self)
     },
 
@@ -204,11 +207,11 @@ Fig <- R6::R6Class( # nolint
 
 fig <- Fig$new()
 
-#' @param key A key to delete its corresponding value.
+#' @param ... Keys to delete values for.
 #' @rdname Fig
 #' @export
-fig_delete <- function(key) {
-  fig$delete(key)
+fig_delete <- function(...) {
+  fig$delete(...)
 }
 
 #' @param key A key to retrieve its corresponding value.
