@@ -111,6 +111,8 @@ fig$set_many("foo.bar.baz" = 1, .split = TRUE)
 
 fig <- Fig$new()
 fig$update_env_prefix("RCONNECT_")
+# Reset by passing an empty string
+fig$update_env_prefix("")
 }
 \section{Methods}{
 \subsection{Public methods}{
@@ -337,7 +339,7 @@ Update prefix for system environment variables
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{env_prefix}}{(character) A prefix to be prepended to a key before
-system environment lookup.}
+system environment lookup. Pass an empty string to reset.}
 }
 \if{html}{\out{</div>}}
 }
@@ -345,6 +347,8 @@ system environment lookup.}
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{fig <- Fig$new()
 fig$update_env_prefix("RCONNECT_")
+# Reset by passing an empty string
+fig$update_env_prefix("")
 }
 \if{html}{\out{</div>}}
 

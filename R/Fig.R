@@ -131,10 +131,12 @@ Fig <- R6::R6Class( # nolint
 
     #' @description Update prefix for system environment variables
     #' @param env_prefix (character) A prefix to be prepended to a key before
-    #' system environment lookup.
+    #' system environment lookup. Pass an empty string to reset.
     #' @examples
     #' fig <- Fig$new()
     #' fig$update_env_prefix("RCONNECT_")
+    #' # Reset by passing an empty string
+    #' fig$update_env_prefix("")
     update_env_prefix = function(env_prefix) {
       stopifnot(
         is.character(env_prefix),
