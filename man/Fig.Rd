@@ -356,7 +356,7 @@ fig$store_list(list(foo = 123, baz = "abc"), split = TRUE)
 \if{html}{\out{<a id="method-store_many"></a>}}
 \if{latex}{\out{\hypertarget{method-store_many}{}}}
 \subsection{Method \code{store_many()}}{
-Set Any Number of Values at Once
+Set Any Number of Values
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Fig$store_many(..., .split = getOption("fig.split", TRUE))}\if{html}{\out{</div>}}
 }
