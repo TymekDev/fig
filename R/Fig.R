@@ -128,24 +128,19 @@ Fig <- R6::R6Class( # nolint
 
     #' @description Store a List's Contents
     #' @param l (named list) Names are used as keys for storing their values.
-    #' @param delete_all A logical determining whether to call `delete_all()`
-    #' before storing values.
     #' @param split A logical determining whether dots in `key` are treated
     #' specially or as is. See Details section in `store()`.
     #' @examples
     #' fig <- fig$New()
     #' fig$store_list(list(foo = 1, bar = 2))
     #' fig$store_list(list(foo = 123, baz = "abc"), split = TRUE)
-    store_list = function(l, delete_all = FALSE, split = getOption("fig.split", TRUE)) {
+    store_list = function(l, split = getOption("fig.split", TRUE)) {
       keys <- names(l)
       stopifnot(
         !is.null(keys),
         all(keys != ""),
         length(unique(keys)) == length(keys)
       )
-      if (isTRUE(delete_all)) {
-        self$delete_all()
-      }
       for (key in keys) {
         self$store(key, l[[key]], split)
       }
@@ -155,17 +150,15 @@ Fig <- R6::R6Class( # nolint
     #' @description Set Any Number of Values at Once
     #' @param ... Named arguments. Names are used as keys for storing argument
     #' values.
-    #' @param .delete_all A logical determining whether to call `delete_all()`
-    #' before storing values.
     #' @param .split A logical determining whether dots in `key` are treated
     #' specially or as is. See Details section in `store()`.
     #' @examples
     #' fig <- Fig$new()
     #' fig$store_many("foo" = 1, "bar" = 2)
     #' fig$store_many("foo.bar.baz" = 1, .split = TRUE)
-    #' fig$store_many("foo" = "a", "baz" = 123, .delete_all = TRUE, .split = FALSE)
-    store_many = function(..., .delete_all = FALSE, .split = getOption("fig.split", TRUE)) {
-      self$store_list(list(...), .delete_all, .split)
+    #' fig$store_many("foo" = "a", "baz" = 123, .split = FALSE)
+    store_many = function(..., .split = getOption("fig.split", TRUE)) {
+      self$store_list(list(...), .split)
     }
   ),
   private = list(
@@ -234,14 +227,12 @@ fig_get <- function(key, split = getOption("fig.split", TRUE)) {
 }
 
 #' @param l (named list) Names are used as keys for storing their values.
-#' @param delete_all A logical determining whether to call `delete_all()`
-#' before storing values.
 #' @param split A logical determining whether dots in `key` are treated
 #' specially or as is. See Details section in `store()`.
 #' @rdname Fig
 #' @export
-fig_store_list <- function(l, delete_all = FALSE, split = getOption("fig.split", TRUE)) {
-  fig$store_list(l, delete_all, split)
+fig_store_list <- function(l, split = getOption("fig.split", TRUE)) {
+  fig$store_list(l, split)
 }
 
 #' @rdname Fig
@@ -252,6 +243,6 @@ fig_store <- function(key, value, split = getOption("fig.split", TRUE)) {
 
 #' @rdname Fig
 #' @export
-fig_store_many <- function(..., .delete_all = FALSE, .split = getOption("fig.split", TRUE)) {
-  fig$store_many(..., .delete_all = .delete_all, .split = .split)
+fig_store_many <- function(..., .split = getOption("fig.split", TRUE)) {
+  fig$store_many(..., .split = .split)
 }

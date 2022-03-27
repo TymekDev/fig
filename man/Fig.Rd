@@ -19,11 +19,11 @@ fig_delete_all()
 
 fig_get(key, split = getOption("fig.split", TRUE))
 
-fig_store_list(l, delete_all = FALSE, split = getOption("fig.split", TRUE))
+fig_store_list(l, split = getOption("fig.split", TRUE))
 
 fig_store(key, value, split = getOption("fig.split", TRUE))
 
-fig_store_many(..., .delete_all = FALSE, .split = getOption("fig.split", TRUE))
+fig_store_many(..., .split = getOption("fig.split", TRUE))
 }
 \arguments{
 \item{env_prefix}{(character) A prefix to be prepended to a key before
@@ -37,9 +37,6 @@ system environment lookup. Pass an empty string to reset.}
 specially or as is. See Details section in \code{store()}.}
 
 \item{l}{(named list) Names are used as keys for storing their values.}
-
-\item{delete_all}{A logical determining whether to call \code{delete_all()}
-before storing values.}
 }
 \description{
 \code{Fig} class is a main driver of this package. For usage details
@@ -115,7 +112,7 @@ fig$store_list(list(foo = 123, baz = "abc"), split = TRUE)
 fig <- Fig$new()
 fig$store_many("foo" = 1, "bar" = 2)
 fig$store_many("foo.bar.baz" = 1, .split = TRUE)
-fig$store_many("foo" = "a", "baz" = 123, .delete_all = TRUE, .split = FALSE)
+fig$store_many("foo" = "a", "baz" = 123, .split = FALSE)
 }
 \section{Methods}{
 \subsection{Public methods}{
@@ -331,16 +328,13 @@ fig$store("x.y", "a", FALSE)
 \subsection{Method \code{store_list()}}{
 Store a List's Contents
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Fig$store_list(l, delete_all = FALSE, split = getOption("fig.split", TRUE))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Fig$store_list(l, split = getOption("fig.split", TRUE))}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{l}}{(named list) Names are used as keys for storing their values.}
-
-\item{\code{delete_all}}{A logical determining whether to call \code{delete_all()}
-before storing values.}
 
 \item{\code{split}}{A logical determining whether dots in \code{key} are treated
 specially or as is. See Details section in \code{store()}.}
@@ -364,7 +358,7 @@ fig$store_list(list(foo = 123, baz = "abc"), split = TRUE)
 \subsection{Method \code{store_many()}}{
 Set Any Number of Values at Once
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Fig$store_many(..., .delete_all = FALSE, .split = getOption("fig.split", TRUE))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Fig$store_many(..., .split = getOption("fig.split", TRUE))}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -372,9 +366,6 @@ Set Any Number of Values at Once
 \describe{
 \item{\code{...}}{Named arguments. Names are used as keys for storing argument
 values.}
-
-\item{\code{.delete_all}}{A logical determining whether to call \code{delete_all()}
-before storing values.}
 
 \item{\code{.split}}{A logical determining whether dots in \code{key} are treated
 specially or as is. See Details section in \code{store()}.}
@@ -386,7 +377,7 @@ specially or as is. See Details section in \code{store()}.}
 \preformatted{fig <- Fig$new()
 fig$store_many("foo" = 1, "bar" = 2)
 fig$store_many("foo.bar.baz" = 1, .split = TRUE)
-fig$store_many("foo" = "a", "baz" = 123, .delete_all = TRUE, .split = FALSE)
+fig$store_many("foo" = "a", "baz" = 123, .split = FALSE)
 }
 \if{html}{\out{</div>}}
 
