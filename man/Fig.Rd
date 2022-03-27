@@ -19,9 +19,9 @@ fig_load_config(cfg, purge = FALSE, split = getOption("fig.split", TRUE))
 
 fig_purge()
 
-fig_set(key, value)
+fig_set(key, value, split = getOption("fig.split", TRUE))
 
-fig_set_many(...)
+fig_set_many(..., .split = getOption("fig.split", TRUE))
 
 fig_update_env_prefix(env_prefix)
 }
@@ -29,7 +29,7 @@ fig_update_env_prefix(env_prefix)
 \item{key}{A key to store a value for.}
 
 \item{split}{A logical determining whether dots in \code{key} are treated
-specially or as is. See Details section in \code{set()}.}
+specially or as is. See Details section.}
 
 \item{cfg}{(Named list) Names are used as keys for provided values.}
 
@@ -38,10 +38,13 @@ values.}
 
 \item{value}{A value to be stored.}
 
-\item{...}{Named values Names are used as keys for provided values.}
+\item{...}{Named values. Names are used as keys for provided values.}
+
+\item{.split}{A logical determining whether dots in \code{key} are treated
+specially or as is. See Details section in \code{set()}.}
 
 \item{env_prefix}{(character) A prefix to be prepended to a key before system
-environment lookup.}
+environment lookup. Pass an empty string to reset.}
 }
 \description{
 \code{Fig} class is a main driver of this package. For usage details
@@ -51,8 +54,6 @@ Fig provides a set of exported functions. This makes \code{Fig} class instance
 creation optional, and makes the package mimic being a class instance. Those
 functions are simple wrappers on an internal \code{Fig} object and are prefixed to
 avoid masking.
-
-Set any number of values at once
 }
 \examples{
 
@@ -87,6 +88,14 @@ fig$get("bar.baz")
 fig$set("bar.baz", 3)
 fig$get("bar.baz") # == 2
 fig$get("bar.baz", split = FALSE) # == 3
+
+## ------------------------------------------------
+## Method `Fig$load_config`
+## ------------------------------------------------
+
+fig <- fig$New()
+fig$load_config(list(foo = 1, bar = 2))
+fig$load_config(list(foo = 123, baz = "abc"), TRUE)
 
 ## ------------------------------------------------
 ## Method `Fig$purge`
@@ -267,6 +276,16 @@ specially or as is. See Details section in \code{set()}.}
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{fig <- fig$New()
+fig$load_config(list(foo = 1, bar = 2))
+fig$load_config(list(foo = 123, baz = "abc"), TRUE)
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-purge"></a>}}
