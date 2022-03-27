@@ -19,8 +19,26 @@ Fig <- R6::R6Class( # nolint
     #' fig <- Fig$new()
     #' fig <- Fig$new("RCONNECT_")
     initialize = function(env_prefix = "") {
-      self$update_env_prefix(env_prefix)
+      self$configure(env_prefix = env_prefix)
       private$items <- new.env()
+    },
+
+    #' @description Change Fig Settings
+    #' @param env_prefix (character) A prefix to be prepended to a key before system
+    #' environment lookup. Pass an empty string to reset.
+    #' @examples
+    #' fig <- Fig$new()
+    #' fig$configure(env_prefix = "RCONNECT_")
+    configure = function(env_prefix) {
+      if (!missing(env_prefix)) {
+        stopifnot(
+          is.character(env_prefix),
+          !is.na(env_prefix),
+          length(env_prefix) == 1
+        )
+        private$add_env_prefix <- function(key) paste0(env_prefix, key)
+      }
+      invisible(self)
     },
 
     #' @description Delete stored values
@@ -148,28 +166,6 @@ Fig <- R6::R6Class( # nolint
     #' fig$store_many("foo" = "a", "baz" = 123, .purge = TRUE, .split = TRUE)
     store_many = function(..., .purge = FALSE, .split = getOption("fig.split", TRUE)) {
       self$store_list(list(...), .purge, .split)
-    },
-
-    #' @description Update prefix for system environment variables
-    #' @param env_prefix (character) A prefix to be prepended to a key before
-    #' system environment lookup. Pass an empty string to reset.
-    #' @examples
-    #' fig <- Fig$new()
-    #' fig$update_env_prefix("RCONNECT_")
-    #' # Reset by passing an empty string
-    #' fig$update_env_prefix("")
-    update_env_prefix = function(env_prefix) {
-      stopifnot(
-        is.character(env_prefix),
-        !is.na(env_prefix),
-        length(env_prefix) == 1
-      )
-      private$add_env_prefix <- if (nchar(env_prefix) > 0) {
-        function(key) paste0(env_prefix, key)
-      } else {
-        identity
-      }
-      invisible(self)
     }
   ),
   private = list(
@@ -206,6 +202,14 @@ Fig <- R6::R6Class( # nolint
 )
 
 fig <- Fig$new()
+
+#' @param env_prefix (character) A prefix to be prepended to a key before system
+#' environment lookup. Pass an empty string to reset.
+#' @rdname Fig
+#' @export
+fig_configure <- function(env_prefix) {
+  fig$configure(env_prefix)
+}
 
 #' @param ... Keys to delete values for.
 #' @rdname Fig
@@ -259,12 +263,4 @@ fig_store <- function(key, value, split = getOption("fig.split", TRUE)) {
 #' @export
 fig_store_many <- function(..., .purge = FALSE, .split = getOption("fig.split", TRUE)) {
   fig$store_many(..., .purge = .purge, .split = .split)
-}
-
-#' @param env_prefix (character) A prefix to be prepended to a key before system
-#' environment lookup. Pass an empty string to reset.
-#' @rdname Fig
-#' @export
-fig_update_env_prefix <- function(env_prefix) {
-  fig$update_env_prefix(env_prefix)
 }

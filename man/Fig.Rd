@@ -2,15 +2,17 @@
 % Please edit documentation in R/Fig.R
 \name{Fig}
 \alias{Fig}
+\alias{fig_configure}
 \alias{fig_delete}
 \alias{fig_get}
 \alias{fig_store_list}
 \alias{fig_purge}
 \alias{fig_store}
 \alias{fig_store_many}
-\alias{fig_update_env_prefix}
 \title{Create a Fig to Store Config}
 \usage{
+fig_configure(env_prefix)
+
 fig_delete(...)
 
 fig_get(key, split = getOption("fig.split", TRUE))
@@ -22,10 +24,11 @@ fig_purge()
 fig_store(key, value, split = getOption("fig.split", TRUE))
 
 fig_store_many(..., .purge = FALSE, .split = getOption("fig.split", TRUE))
-
-fig_update_env_prefix(env_prefix)
 }
 \arguments{
+\item{env_prefix}{(character) A prefix to be prepended to a key before system
+environment lookup. Pass an empty string to reset.}
+
 \item{...}{Named values. Names are used as keys for provided values.}
 
 \item{key}{A key to store a value for.}
@@ -45,9 +48,6 @@ values.}
 
 \item{.split}{A logical determining whether dots in \code{key} are treated
 specially or as is. See Details section in \code{store()}.}
-
-\item{env_prefix}{(character) A prefix to be prepended to a key before system
-environment lookup. Pass an empty string to reset.}
 }
 \description{
 \code{Fig} class is a main driver of this package. For usage details
@@ -66,6 +66,13 @@ avoid masking.
 
 fig <- Fig$new()
 fig <- Fig$new("RCONNECT_")
+
+## ------------------------------------------------
+## Method `Fig$configure`
+## ------------------------------------------------
+
+fig <- Fig$new()
+fig$configure(env_prefix = "RCONNECT_")
 
 ## ------------------------------------------------
 ## Method `Fig$delete`
@@ -128,27 +135,18 @@ fig <- Fig$new()
 fig$store_many("foo" = 1, "bar" = 2)
 fig$store_many("foo.bar.baz" = 1, .split = TRUE)
 fig$store_many("foo" = "a", "baz" = 123, .purge = TRUE, .split = TRUE)
-
-## ------------------------------------------------
-## Method `Fig$update_env_prefix`
-## ------------------------------------------------
-
-fig <- Fig$new()
-fig$update_env_prefix("RCONNECT_")
-# Reset by passing an empty string
-fig$update_env_prefix("")
 }
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{Fig$new()}}
+\item \href{#method-configure}{\code{Fig$configure()}}
 \item \href{#method-delete}{\code{Fig$delete()}}
 \item \href{#method-get}{\code{Fig$get()}}
 \item \href{#method-purge}{\code{Fig$purge()}}
 \item \href{#method-store}{\code{Fig$store()}}
 \item \href{#method-store_list}{\code{Fig$store_list()}}
 \item \href{#method-store_many}{\code{Fig$store_many()}}
-\item \href{#method-update_env_prefix}{\code{Fig$update_env_prefix()}}
 \item \href{#method-clone}{\code{Fig$clone()}}
 }
 }
@@ -173,6 +171,33 @@ system environment lookup.}
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{fig <- Fig$new()
 fig <- Fig$new("RCONNECT_")
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-configure"></a>}}
+\if{latex}{\out{\hypertarget{method-configure}{}}}
+\subsection{Method \code{configure()}}{
+Change Fig Settings
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Fig$configure(env_prefix)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{env_prefix}}{(character) A prefix to be prepended to a key before system
+environment lookup. Pass an empty string to reset.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{fig <- Fig$new()
+fig$configure(env_prefix = "RCONNECT_")
 }
 \if{html}{\out{</div>}}
 
@@ -384,35 +409,6 @@ specially or as is. See Details section in \code{store()}.}
 fig$store_many("foo" = 1, "bar" = 2)
 fig$store_many("foo.bar.baz" = 1, .split = TRUE)
 fig$store_many("foo" = "a", "baz" = 123, .purge = TRUE, .split = TRUE)
-}
-\if{html}{\out{</div>}}
-
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-update_env_prefix"></a>}}
-\if{latex}{\out{\hypertarget{method-update_env_prefix}{}}}
-\subsection{Method \code{update_env_prefix()}}{
-Update prefix for system environment variables
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Fig$update_env_prefix(env_prefix)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{env_prefix}}{(character) A prefix to be prepended to a key before
-system environment lookup. Pass an empty string to reset.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{fig <- Fig$new()
-fig$update_env_prefix("RCONNECT_")
-# Reset by passing an empty string
-fig$update_env_prefix("")
 }
 \if{html}{\out{</div>}}
 
