@@ -4,6 +4,7 @@
 \alias{Fig}
 \alias{fig_delete}
 \alias{fig_get}
+\alias{fig_purge}
 \alias{fig_set}
 \alias{fig_set_many}
 \alias{fig_update_env_prefix}
@@ -12,6 +13,8 @@
 fig_delete(key)
 
 fig_get(key, split = getOption("fig.split", TRUE))
+
+fig_purge()
 
 fig_set(key, value)
 
@@ -78,6 +81,13 @@ fig$get("bar.baz") # == 2
 fig$get("bar.baz", split = FALSE) # == 3
 
 ## ------------------------------------------------
+## Method `Fig$purge`
+## ------------------------------------------------
+
+fig <- Fig$new()
+fig$set("a", 1)$purge()$get("a") # == NULL
+
+## ------------------------------------------------
 ## Method `Fig$set`
 ## ------------------------------------------------
 
@@ -108,6 +118,7 @@ fig$update_env_prefix("RCONNECT_")
 \item \href{#method-new}{\code{Fig$new()}}
 \item \href{#method-delete}{\code{Fig$delete()}}
 \item \href{#method-get}{\code{Fig$get()}}
+\item \href{#method-purge}{\code{Fig$purge()}}
 \item \href{#method-set}{\code{Fig$set()}}
 \item \href{#method-set_many}{\code{Fig$set_many()}}
 \item \href{#method-update_env_prefix}{\code{Fig$update_env_prefix()}}
@@ -218,6 +229,25 @@ fig$get("bar.baz")
 fig$set("bar.baz", 3)
 fig$get("bar.baz") # == 2
 fig$get("bar.baz", split = FALSE) # == 3
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-purge"></a>}}
+\if{latex}{\out{\hypertarget{method-purge}{}}}
+\subsection{Method \code{purge()}}{
+Purge stored values
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Fig$purge()}\if{html}{\out{</div>}}
+}
+
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{fig <- Fig$new()
+fig$set("a", 1)$purge()$get("a") # == NULL
 }
 \if{html}{\out{</div>}}
 

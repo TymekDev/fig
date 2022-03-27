@@ -33,5 +33,5 @@ test_that("fig_set_many works", {
   expect_equal(fig_get("foo"), 1)
   expect_identical(fig_get("bar"), env)
   expect_identical(fig_get("baz"), l)
-  purge()
+  fig_purge()
 })
