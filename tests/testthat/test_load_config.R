@@ -10,3 +10,7 @@ test_that("fig_load_config purges", {
   fig_load_config(list(b = 1), TRUE)
   expect_equal(fig_get("a"), NULL)
 })
+
+test_that("fig_load_config shares load_config arguments", {
+  expect_equal(formalArgs(fig_load_config), formalArgs(Fig$new()$load_config))
+})

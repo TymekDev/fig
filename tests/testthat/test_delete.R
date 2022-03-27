@@ -17,3 +17,7 @@ test_that("fig_delete works", {
   expect_equal(fig_get("foo"), NULL)
   fig_purge()
 })
+
+test_that("fig_delete shares delete arguments", {
+  expect_equal(formalArgs(fig_delete), formalArgs(Fig$new()$delete))
+})

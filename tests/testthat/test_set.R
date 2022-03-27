@@ -50,3 +50,7 @@ test_that("fig_set works", {
 
   fig_purge()
 })
+
+test_that("fig_set shares set arguments", {
+  expect_equal(formalArgs(fig_set), formalArgs(Fig$new()$set))
+})

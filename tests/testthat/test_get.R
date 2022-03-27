@@ -48,3 +48,7 @@ test_that("fig.split option works", {
   expect_equal(fig$get("foo.bar"), 1)
   with_options(list(fig.split = FALSE), expect_equal(fig$get("foo.bar"), 2))
 })
+
+test_that("fig_get shares get arguments", {
+  expect_equal(formalArgs(fig_get), formalArgs(Fig$new()$get))
+})

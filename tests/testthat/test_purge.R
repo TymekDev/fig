@@ -4,3 +4,7 @@ test_that("purge works", {
   fig$purge()
   expect_false(identical(fig$.__enclos_env__$private, old_items))
 })
+
+test_that("fig_purge shares purge arguments", {
+  expect_equal(formalArgs(fig_purge), formalArgs(Fig$new()$purge))
+})
