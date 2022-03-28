@@ -53,7 +53,7 @@ Fig <- R6::R6Class( # nolint
     #' fig$delete("bar", "baz")
     #' fig$get_many("foo", "bar", "baz") # == list(NULL, NULL, NULL)
     delete = function(...) {
-      rm(list = c(...), envir = private$items)
+      rm(list = c(...), envir = private$storage)
       invisible(self)
     },
 
@@ -65,7 +65,7 @@ Fig <- R6::R6Class( # nolint
     #' fig$delete_all()
     #' fig$get_many("foo", "bar", "baz") # == list(NULL, NULL, NULL)
     delete_all = function() {
-      private$items <- new.env()
+      private$storage <- new.env()
       invisible(self)
     },
 
@@ -105,7 +105,11 @@ Fig <- R6::R6Class( # nolint
       if (!is.na(value)) {
         return(value)
       }
-      if (isTRUE(split)) private$traverse_items(key) else private$items[[key]]
+      if (isTRUE(split)) {
+        private$traverse_storage(key)
+      } else {
+        private$storage[[key]]
+      }
     },
 
     #' @description Retrieve Any Number of Stored Values
@@ -120,7 +124,7 @@ Fig <- R6::R6Class( # nolint
     #' @description Retrieve All Stored Values
     #' @return An unnamed list of all stored values.
     get_all = function() {
-      as.list(private$items)
+      as.list(private$storage)
     },
 
     #' @description Store a Value
@@ -142,7 +146,7 @@ Fig <- R6::R6Class( # nolint
       if (isTRUE(split)) {
         private$insert_value(key, value)
       } else {
-        private$items[[key]] <- value
+        private$storage[[key]] <- value
       }
       invisible(self)
     },
@@ -186,7 +190,7 @@ Fig <- R6::R6Class( # nolint
   ),
   private = list(
     add_env_prefix = NULL,
-    items = new.env(),
+    storage = new.env(),
     insert_value = function(key, value) {
       keys <- strsplit(key, ".", TRUE)[[1]]
       n_keys <- length(keys)
@@ -197,18 +201,18 @@ Fig <- R6::R6Class( # nolint
           l[[key]] <- descend(l[[key]], lvl + 1)
         } else {
           # In case key has to be added next to a single value. With check
-          # against private$items to not convert it.
-          if (!identical(private$items, l) && !is.list(l)) {
+          # against private$storage to not convert it.
+          if (!identical(private$storage, l) && !is.list(l)) {
             l <- as.list(l)
           }
           l[[key]] <- value
         }
         l
       }
-      private$items <- descend(private$items)
+      private$storage <- descend(private$storage)
     },
-    traverse_items = function(key) {
-      value <- private$items
+    traverse_storage = function(key) {
+      value <- private$storage
       for (key_part in strsplit(key, ".", TRUE)[[1]]) {
         value <- value[[key_part]]
       }
