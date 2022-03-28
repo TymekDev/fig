@@ -14,6 +14,7 @@ Fig <- R6::R6Class( # nolint
     #' @description Create a New Fig Instance
     #' @param env_prefix (character) A prefix to be prepended to a key before
     #' system environment lookup.
+    #' @return New instance of `Fig`.
     #' @examples
     #' fig <- Fig$new()
     #' fig <- Fig$new(env_prefix = "RCONNECT_")
@@ -26,6 +27,7 @@ Fig <- R6::R6Class( # nolint
     #' @details Unset arguments do not change configuration.
     #' @param env_prefix (character) A prefix to be prepended to a key before
     #' system environment lookup. Pass an empty string to reset.
+    #' @return Reference to self. Other methods can be chained after this one.
     #' @examples
     #' fig <- Fig$new(env_prefix = "RCONNECT_")
     #' fig$configure(env_prefix = "")
@@ -44,6 +46,7 @@ Fig <- R6::R6Class( # nolint
 
     #' @description Delete Stored Values
     #' @param ... Keys to be deleted.
+    #' @return Reference to self. Other methods can be chained after this one.
     #' @examples
     #' fig <- Fig$new()
     #' fig$store_many("foo" = 1, "bar" = 2, "baz" = 3)
@@ -56,6 +59,8 @@ Fig <- R6::R6Class( # nolint
     },
 
     #' @description Delete All Stored Values
+    #' @return Reference to self. Other methods can be chained after this one.
+    #' @examples
     #' fig <- Fig$new()
     #' fig$store_many("foo" = 1, "bar" = 2, "baz" = 3)
     #' fig$delete_all()
@@ -82,6 +87,7 @@ Fig <- R6::R6Class( # nolint
     #' @param key A key to retrieve a value for.
     #' @param split A logical determining whether dots in `key` are treated
     #' specially or as is. See Details section.
+    #' @return A value associated with provided `key`.
     #' @examples
     #' fig <- Fig$new()
     #' fig$store("foo", 1)
@@ -107,11 +113,13 @@ Fig <- R6::R6Class( # nolint
     #' @param ... Keys to retrieve values for.
     #' @param .split A logical determining whether dots in `key` are treated
     #' specially or as is. See Details section in `get()`.
+    #' @return An unnamed list of values associated with keys provided in `...`.
     get_many = function(..., .split = getOption("fig.split", TRUE)) {
       lapply(list(...), self$get, split = .split)
     },
 
     #' @description Retrieve All Stored Values
+    #' @return An unnamed list of all stored values.
     get_all = function() {
       as.list(private$items)
     },
@@ -121,10 +129,11 @@ Fig <- R6::R6Class( # nolint
     #' `fig$store("foo.bar", 1)` is equivalent to `fig$store("foo", list(bar =
     #' 1)`. This behavior can be disabled either by setting `options(fig.split
     #' = FALSE)` or by providing `split = FALSE` argument.
-    #' @param split A logical determining whether dots in `key` are treated
-    #' specially or as is. See Details section.
     #' @param key A key to store a value for.
     #' @param value A value to be stored.
+    #' @param split A logical determining whether dots in `key` are treated
+    #' specially or as is. See Details section.
+    #' @return Reference to self. Other methods can be chained after this one.
     #' @examples
     #' fig <- Fig$new()
     #' fig$store("foo", 1)
@@ -143,6 +152,7 @@ Fig <- R6::R6Class( # nolint
     #' @param l (named list) Names are used as keys for storing their values.
     #' @param split A logical determining whether dots in `key` are treated
     #' specially or as is. See Details section in `store()`.
+    #' @return Reference to self. Other methods can be chained after this one.
     #' @examples
     #' fig <- fig$New()
     #' fig$store_list(list(foo = 1, bar = 2))
@@ -165,6 +175,7 @@ Fig <- R6::R6Class( # nolint
     #' values.
     #' @param .split A logical determining whether dots in `key` are treated
     #' specially or as is. See Details section in `store()`.
+    #' @return Reference to self. Other methods can be chained after this one.
     #' @examples
     #' fig <- Fig$new()
     #' fig$store_many("foo" = 1, "bar" = 2)
@@ -211,6 +222,7 @@ fig <- Fig$new()
 
 #' @param env_prefix (character) A prefix to be prepended to a key before
 #' system environment lookup. Pass an empty string to reset.
+#' @return Reference to self. Other methods can be chained after this one.
 #' @rdname Fig
 #' @export
 fig_configure <- function(env_prefix) {
@@ -218,12 +230,14 @@ fig_configure <- function(env_prefix) {
 }
 
 #' @param ... Keys to be deleted.
+#' @return Reference to self. Other methods can be chained after this one.
 #' @rdname Fig
 #' @export
 fig_delete <- function(...) {
   fig$delete(...)
 }
 
+#' @return Reference to self. Other methods can be chained after this one.
 #' @rdname Fig
 #' @export
 fig_delete_all <- function() {
@@ -233,6 +247,7 @@ fig_delete_all <- function() {
 #' @param key A key to retrieve a value for.
 #' @param split A logical determining whether dots in `key` are treated
 #' specially or as is. See Details section.
+#' @return A value associated with provided `key`.
 #' @rdname Fig
 #' @export
 fig_get <- function(key, split = getOption("fig.split", TRUE)) {
@@ -242,34 +257,46 @@ fig_get <- function(key, split = getOption("fig.split", TRUE)) {
 #' @param ... Keys to retrieve values for.
 #' @param .split A logical determining whether dots in `key` are treated
 #' specially or as is. See Details section in `get()`.
+#' @return An unnamed list of values associated with keys provided in `...`.
 #' @rdname Fig
 #' @export
 fig_get_many <- function(..., .split = getOption("fig.split", TRUE)) {
   fig$get_many(..., .split = .split)
 }
 
-#' @description Retrieve All Stored Values
+#' @return An unnamed list of all stored values.
 #' @rdname Fig
 #' @export
 fig_get_all <- function() {
   fig$get_all
 }
 
-#' @param l (named list) Names are used as keys for storing their values.
+#' @param key A key to store a value for.
+#' @param value A value to be stored.
 #' @param split A logical determining whether dots in `key` are treated
-#' specially or as is. See Details section in `store()`.
-#' @rdname Fig
-#' @export
-fig_store_list <- function(l, split = getOption("fig.split", TRUE)) {
-  fig$store_list(l, split)
-}
-
+#' specially or as is. See Details section.
+#' @return Reference to self. Other methods can be chained after this one.
 #' @rdname Fig
 #' @export
 fig_store <- function(key, value, split = getOption("fig.split", TRUE)) {
   fig$store(key, value, split)
 }
 
+#' @param l (named list) Names are used as keys for storing their values.
+#' @param split A logical determining whether dots in `key` are treated
+#' specially or as is. See Details section in `store()`.
+#' @return Reference to self. Other methods can be chained after this one.
+#' @rdname Fig
+#' @export
+fig_store_list <- function(l, split = getOption("fig.split", TRUE)) {
+  fig$store_list(l, split)
+}
+
+#' @param ... Named arguments. Names are used as keys for storing argument
+#' values.
+#' @param .split A logical determining whether dots in `key` are treated
+#' specially or as is. See Details section in `store()`.
+#' @return Reference to self. Other methods can be chained after this one.
 #' @rdname Fig
 #' @export
 fig_store_many <- function(..., .split = getOption("fig.split", TRUE)) {

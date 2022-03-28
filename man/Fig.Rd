@@ -8,8 +8,8 @@
 \alias{fig_get}
 \alias{fig_get_many}
 \alias{fig_get_all}
-\alias{fig_store_list}
 \alias{fig_store}
+\alias{fig_store_list}
 \alias{fig_store_many}
 \title{Fig for Your Config}
 \usage{
@@ -25,9 +25,9 @@ fig_get_many(..., .split = getOption("fig.split", TRUE))
 
 fig_get_all()
 
-fig_store_list(l, split = getOption("fig.split", TRUE))
-
 fig_store(key, value, split = getOption("fig.split", TRUE))
+
+fig_store_list(l, split = getOption("fig.split", TRUE))
 
 fig_store_many(..., .split = getOption("fig.split", TRUE))
 }
@@ -35,17 +35,39 @@ fig_store_many(..., .split = getOption("fig.split", TRUE))
 \item{env_prefix}{(character) A prefix to be prepended to a key before
 system environment lookup. Pass an empty string to reset.}
 
-\item{...}{Keys to retrieve values for.}
+\item{...}{Named arguments. Names are used as keys for storing argument
+values.}
 
-\item{key}{A key to retrieve a value for.}
+\item{key}{A key to store a value for.}
 
 \item{split}{A logical determining whether dots in \code{key} are treated
 specially or as is. See Details section in \code{store()}.}
 
 \item{.split}{A logical determining whether dots in \code{key} are treated
-specially or as is. See Details section in \code{get()}.}
+specially or as is. See Details section in \code{store()}.}
+
+\item{value}{A value to be stored.}
 
 \item{l}{(named list) Names are used as keys for storing their values.}
+}
+\value{
+Reference to self. Other methods can be chained after this one.
+
+Reference to self. Other methods can be chained after this one.
+
+Reference to self. Other methods can be chained after this one.
+
+A value associated with provided \code{key}.
+
+An unnamed list of values associated with keys provided in \code{...}.
+
+An unnamed list of all stored values.
+
+Reference to self. Other methods can be chained after this one.
+
+Reference to self. Other methods can be chained after this one.
+
+Reference to self. Other methods can be chained after this one.
 }
 \description{
 \code{Fig} class is a main driver of this package. For usage details
@@ -54,8 +76,6 @@ refer to \code{Fig} class methods documentation.
 Fig provides a set of exported functions. This makes \code{Fig} class instance
 creation optional, and makes the package itself mimic being a class instance.
 Those functions are wrappers on an internal \code{Fig} object.
-
-Retrieve All Stored Values
 }
 \examples{
 
@@ -82,6 +102,15 @@ fig <- Fig$new()
 fig$store_many("foo" = 1, "bar" = 2, "baz" = 3)
 fig$delete("foo")
 fig$delete("bar", "baz")
+fig$get_many("foo", "bar", "baz") # == list(NULL, NULL, NULL)
+
+## ------------------------------------------------
+## Method `Fig$delete_all`
+## ------------------------------------------------
+
+fig <- Fig$new()
+fig$store_many("foo" = 1, "bar" = 2, "baz" = 3)
+fig$delete_all()
 fig$get_many("foo", "bar", "baz") # == list(NULL, NULL, NULL)
 
 ## ------------------------------------------------
@@ -158,6 +187,9 @@ system environment lookup.}
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Returns}{
+New instance of \code{Fig}.
+}
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{fig <- Fig$new()
@@ -189,6 +221,9 @@ system environment lookup. Pass an empty string to reset.}
 Unset arguments do not change configuration.
 }
 
+\subsection{Returns}{
+Reference to self. Other methods can be chained after this one.
+}
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{fig <- Fig$new(env_prefix = "RCONNECT_")
@@ -216,6 +251,9 @@ Delete Stored Values
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Returns}{
+Reference to self. Other methods can be chained after this one.
+}
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{fig <- Fig$new()
@@ -234,12 +272,22 @@ fig$get_many("foo", "bar", "baz") # == list(NULL, NULL, NULL)
 \if{latex}{\out{\hypertarget{method-delete_all}{}}}
 \subsection{Method \code{delete_all()}}{
 Delete All Stored Values
-fig <- Fig$new()
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Fig$delete_all()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+Reference to self. Other methods can be chained after this one.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{fig <- Fig$new()
 fig$store_many("foo" = 1, "bar" = 2, "baz" = 3)
 fig$delete_all()
 fig$get_many("foo", "bar", "baz") # == list(NULL, NULL, NULL)
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Fig$delete_all()}\if{html}{\out{</div>}}
+}
+\if{html}{\out{</div>}}
+
 }
 
 }
@@ -279,6 +327,9 @@ Therefore, \code{fig$get("foo.bar")} is equivalent to \code{fig$get("foo")$bar}.
 This behavior can be disabled either by setting \code{options(fig.split = FALSE)} or by providing \code{split = FALSE} argument.
 }
 
+\subsection{Returns}{
+A value associated with provided \code{key}.
+}
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{fig <- Fig$new()
@@ -316,6 +367,9 @@ specially or as is. See Details section in \code{get()}.}
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Returns}{
+An unnamed list of values associated with keys provided in \code{...}.
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_all"></a>}}
@@ -326,6 +380,9 @@ Retrieve All Stored Values
 \if{html}{\out{<div class="r">}}\preformatted{Fig$get_all()}\if{html}{\out{</div>}}
 }
 
+\subsection{Returns}{
+An unnamed list of all stored values.
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-store"></a>}}
@@ -353,6 +410,9 @@ Fig treats dots in \code{key} as nest level delimiters. Therefore,
 \code{fig$store("foo.bar", 1)} is equivalent to \verb{fig$store("foo", list(bar = 1)}. This behavior can be disabled either by setting \code{options(fig.split = FALSE)} or by providing \code{split = FALSE} argument.
 }
 
+\subsection{Returns}{
+Reference to self. Other methods can be chained after this one.
+}
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{fig <- Fig$new()
@@ -384,6 +444,9 @@ specially or as is. See Details section in \code{store()}.}
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Returns}{
+Reference to self. Other methods can be chained after this one.
+}
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{fig <- fig$New()
@@ -414,6 +477,9 @@ values.}
 specially or as is. See Details section in \code{store()}.}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Reference to self. Other methods can be chained after this one.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
