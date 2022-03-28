@@ -3,6 +3,7 @@ test_that("get validates key", {
   expect_error(fig$get(c("a", "b")))
   expect_error(fig$get(list(1, 2)))
   expect_error(fig$get(""))
+  expect_error(fig$get(NA_character_))
   expect_silent(fig$get("foo"))
 })
 
