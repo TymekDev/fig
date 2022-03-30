@@ -1,6 +1,6 @@
 Package: fig
 Title: A Config Package with No "Con"
-Version: 0.0.1
+Version: 1.0.0
 Authors@R:
   c(
     person("Tymoteusz", "Makowski", role = c("cre", "aut"), email = "t@makowski.sh")
