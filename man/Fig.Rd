@@ -13,23 +13,23 @@
 \alias{fig_store_many}
 \title{Fig for Your Config}
 \usage{
-fig_configure(env_prefix)
+fig_configure(env_prefix, split_on)
 
 fig_delete(...)
 
 fig_delete_all()
 
-fig_get(key, split = getOption("fig.split", TRUE))
+fig_get(key)
 
-fig_get_many(..., .split = getOption("fig.split", TRUE))
+fig_get_many(...)
 
 fig_get_all()
 
-fig_store(key, value, split = getOption("fig.split", TRUE))
+fig_store(key, value)
 
-fig_store_list(l, split = getOption("fig.split", TRUE))
+fig_store_list(l)
 
-fig_store_many(..., .split = getOption("fig.split", TRUE))
+fig_store_many(...)
 }
 \arguments{
 \item{env_prefix}{(character) A prefix to be prepended to a key before
@@ -40,34 +40,9 @@ values.}
 
 \item{key}{A key to store a value for.}
 
-\item{split}{A logical determining whether dots in \code{key} are treated
-specially or as is. See Details section in \code{store()}.}
-
-\item{.split}{A logical determining whether dots in \code{key} are treated
-specially or as is. See Details section in \code{store()}.}
-
 \item{value}{A value to be stored.}
 
 \item{l}{(named list) Names are used as keys for storing their values.}
-}
-\value{
-Reference to self. Other methods can be chained after this one.
-
-Reference to self. Other methods can be chained after this one.
-
-Reference to self. Other methods can be chained after this one.
-
-A value associated with provided \code{key}.
-
-An unnamed list of values associated with keys provided in \code{...}.
-
-An unnamed list of all stored values.
-
-Reference to self. Other methods can be chained after this one.
-
-Reference to self. Other methods can be chained after this one.
-
-Reference to self. Other methods can be chained after this one.
 }
 \description{
 \code{Fig} class is a main driver of this package. For usage details
@@ -176,7 +151,7 @@ fig$store_many("foo" = "a", "baz" = 123, .split = FALSE)
 \subsection{Method \code{new()}}{
 Create a New Fig Instance
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Fig$new(env_prefix = "")}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Fig$new(env_prefix = "", split_on = ".")}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -184,9 +159,16 @@ Create a New Fig Instance
 \describe{
 \item{\code{env_prefix}}{(character) A prefix to be prepended to a key before
 system environment lookup.}
+
+\item{\code{split_on}}{(character) A value to split keys on. See Details
+section. Providing an empty string disables this behavior.}
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Details}{
+asdf
+}
+
 \subsection{Returns}{
 New instance of \code{Fig}.
 }
@@ -206,7 +188,7 @@ fig <- Fig$new(env_prefix = "RCONNECT_")
 \subsection{Method \code{configure()}}{
 Configure a Fig Instance
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Fig$configure(env_prefix)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Fig$configure(env_prefix, split_on)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -214,6 +196,9 @@ Configure a Fig Instance
 \describe{
 \item{\code{env_prefix}}{(character) A prefix to be prepended to a key before
 system environment lookup. Pass an empty string to reset.}
+
+\item{\code{split_on}}{(character) A value to split keys on. See Details
+section in \code{new()}. Providing an empty string disables this behavior.}
 }
 \if{html}{\out{</div>}}
 }
@@ -297,16 +282,13 @@ fig$get_many("foo", "bar", "baz") # == list(NULL, NULL, NULL)
 \subsection{Method \code{get()}}{
 Retrieve a Stored Value
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Fig$get(key, split = getOption("fig.split", TRUE))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Fig$get(key)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{key}}{A key to retrieve a value for.}
-
-\item{\code{split}}{A logical determining whether dots in \code{key} are treated
-specially or as is. See Details section.}
 }
 \if{html}{\out{</div>}}
 }
@@ -354,16 +336,13 @@ fig$get("bar.baz", split = FALSE) # == 3
 \subsection{Method \code{get_many()}}{
 Retrieve Any Number of Stored Values
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Fig$get_many(..., .split = getOption("fig.split", TRUE))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Fig$get_many(...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{...}}{Keys to retrieve values for.}
-
-\item{\code{.split}}{A logical determining whether dots in \code{key} are treated
-specially or as is. See Details section in \code{get()}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -390,7 +369,7 @@ An unnamed list of all stored values.
 \subsection{Method \code{store()}}{
 Store a Value
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Fig$store(key, value, split = getOption("fig.split", TRUE))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Fig$store(key, value)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -399,9 +378,6 @@ Store a Value
 \item{\code{key}}{A key to store a value for.}
 
 \item{\code{value}}{A value to be stored.}
-
-\item{\code{split}}{A logical determining whether dots in \code{key} are treated
-specially or as is. See Details section.}
 }
 \if{html}{\out{</div>}}
 }
@@ -431,16 +407,13 @@ fig$store("x.y", "a", FALSE)
 \subsection{Method \code{store_list()}}{
 Store a List's Contents
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Fig$store_list(l, split = getOption("fig.split", TRUE))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Fig$store_list(l)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{l}}{(named list) Names are used as keys for storing their values.}
-
-\item{\code{split}}{A logical determining whether dots in \code{key} are treated
-specially or as is. See Details section in \code{store()}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -464,7 +437,7 @@ fig$store_list(list(foo = 123, baz = "abc"), split = TRUE)
 \subsection{Method \code{store_many()}}{
 Set Any Number of Values
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Fig$store_many(..., .split = getOption("fig.split", TRUE))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Fig$store_many(...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -472,9 +445,6 @@ Set Any Number of Values
 \describe{
 \item{\code{...}}{Named arguments. Names are used as keys for storing argument
 values.}
-
-\item{\code{.split}}{A logical determining whether dots in \code{key} are treated
-specially or as is. See Details section in \code{store()}.}
 }
 \if{html}{\out{</div>}}
 }

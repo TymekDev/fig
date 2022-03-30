@@ -5,9 +5,8 @@ test_that("get_all works", {
 })
 
 test_that("fig_get_all works", {
-  fig <- Fig$new()
-  fig$store_many(a = 1, b = 2, c = 3)
-  expect_equal(fig$get_all(), list(a = 1, b = 2, c = 3))
+  fig_store_many(a = 1, b = 2, c = 3)
+  expect_equal(fig_get_all(), list(a = 1, b = 2, c = 3))
   fig_delete_all()
 })
 
