@@ -196,9 +196,15 @@ Fig <- R6::R6Class( # nolint
       descend <- function(l, lvl = 1) {
         key <- keys[[lvl]]
         if (lvl < n_keys) {
+          # In case the we need to descend into a key that holds a value that is
+          # not a list (e.g. a numeric). Check against private$storage to not
+          # convert it.
+          if (!identical(private$storage, l) && !is.list(l)) {
+            l <- list()
+          }
           l[[key]] <- descend(l[[key]], lvl + 1)
         } else {
-          # In case key has to be added next to a single value. With check
+          # In case the key has to be added next to a single value. Check
           # against private$storage to not convert it.
           if (!identical(private$storage, l) && !is.list(l)) {
             l <- as.list(l)

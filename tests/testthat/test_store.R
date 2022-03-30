@@ -34,6 +34,11 @@ test_that("store works with YAML key notation", {
   fig$store("foo.bar", 4)
   expect_equal(fig$get("foo"), list(bar = 4))
   expect_equal(fig$get("foo.bar"), 4)
+
+  fig <- Fig$new()
+  fig$store_many("foo" = 1, "bar" = 2)
+  fig$store_many("foo.bar.baz" = 1)
+  expect_equal(fig$get("foo.bar"), list(baz = 1))
 })
 
 test_that("fig_store works", {
