@@ -2,48 +2,7 @@
 % Please edit documentation in R/Fig.R
 \name{Fig}
 \alias{Fig}
-\alias{fig_configure}
-\alias{fig_delete}
-\alias{fig_delete_all}
-\alias{fig_get}
-\alias{fig_get_many}
-\alias{fig_get_all}
-\alias{fig_store}
-\alias{fig_store_list}
-\alias{fig_store_many}
 \title{Fig for Your Config}
-\usage{
-fig_configure(env_prefix, split_on)
-
-fig_delete(...)
-
-fig_delete_all()
-
-fig_get(key)
-
-fig_get_many(...)
-
-fig_get_all()
-
-fig_store(key, value)
-
-fig_store_list(l)
-
-fig_store_many(...)
-}
-\arguments{
-\item{env_prefix}{(character) A prefix to be prepended to a key before
-system environment lookup. Pass an empty string to reset.}
-
-\item{...}{Named arguments. Names are used as keys for storing argument
-values.}
-
-\item{key}{A key to store a value for.}
-
-\item{value}{A value to be stored.}
-
-\item{l}{(named list) Names are used as keys for storing their values.}
-}
 \description{
 \code{Fig} class is a main driver of this package. For usage details
 refer to \code{Fig} class methods documentation.
@@ -66,7 +25,8 @@ fig <- Fig$new(env_prefix = "RCONNECT_")
 ## ------------------------------------------------
 
 fig <- Fig$new(env_prefix = "RCONNECT_")
-fig$configure(env_prefix = "")
+fig$configure(env_prefix = "foo_")
+fig$configure(split_on = "")
 fig$configure() # has no effect
 
 ## ------------------------------------------------
@@ -99,9 +59,24 @@ fig$get("foo")
 fig$store("bar", list(baz = 2))
 fig$get("bar.baz")
 
-fig$store("bar.baz", 3, split = FALSE)
-fig$get("bar.baz") # == 2
-fig$get("bar.baz", split = FALSE) # == 3
+fig$configure(split_on = "")
+fig$get("bar.baz") # == NULL
+
+## ------------------------------------------------
+## Method `Fig$get_many`
+## ------------------------------------------------
+
+fig <- Fig$new()
+fig$store_many(foo =  1, bar = 2, baz = 3)
+fig$get_many("foo", "bar")
+
+## ------------------------------------------------
+## Method `Fig$get_all`
+## ------------------------------------------------
+
+fig <- Fig$new()
+fig$store_many(foo =  1, bar = 2, baz = 3)
+fig$get_all()
 
 ## ------------------------------------------------
 ## Method `Fig$store`
@@ -110,15 +85,14 @@ fig$get("bar.baz", split = FALSE) # == 3
 fig <- Fig$new()
 fig$store("foo", 1)
 fig$store("bar", 123)$store("baz", list(1, 2, 3))
-fig$store("x.y", "a", FALSE)
+fig$store("x.y", "a")
 
 ## ------------------------------------------------
 ## Method `Fig$store_list`
 ## ------------------------------------------------
 
-fig <- fig$New()
-fig$store_list(list(foo = 1, bar = 2))
-fig$store_list(list(foo = 123, baz = "abc"), split = TRUE)
+fig <- Fig$new()
+fig$store_list(list(foo = 123, bar = "abc"))
 
 ## ------------------------------------------------
 ## Method `Fig$store_many`
@@ -126,8 +100,8 @@ fig$store_list(list(foo = 123, baz = "abc"), split = TRUE)
 
 fig <- Fig$new()
 fig$store_many("foo" = 1, "bar" = 2)
-fig$store_many("foo.bar.baz" = 1, .split = TRUE)
-fig$store_many("foo" = "a", "baz" = 123, .split = FALSE)
+fig$store_many("foo.bar.baz" = 1)
+fig$store_many("foo" = "a", "baz" = 123)
 }
 \section{Methods}{
 \subsection{Public methods}{
@@ -166,7 +140,7 @@ section. Providing an empty string disables this behavior.}
 \if{html}{\out{</div>}}
 }
 \subsection{Details}{
-asdf
+TODO
 }
 
 \subsection{Returns}{
@@ -212,7 +186,8 @@ Reference to self. Other methods can be chained after this one.
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{fig <- Fig$new(env_prefix = "RCONNECT_")
-fig$configure(env_prefix = "")
+fig$configure(env_prefix = "foo_")
+fig$configure(split_on = "")
 fig$configure() # has no effect
 }
 \if{html}{\out{</div>}}
@@ -292,23 +267,6 @@ Retrieve a Stored Value
 }
 \if{html}{\out{</div>}}
 }
-\subsection{Details}{
-This function returns values based on a following priority
-(highest to lowest). If value is not found, then it looks up next level
-in the precedence.
-\enumerate{
-\item System environment variable (case sensitive)
-\item Value manually set
-}
-
-For system environment lookup dots are replaced by underscores, e.g.
-\code{fig$get("foo.bar")} will look up \strong{foo_bar}.
-
-Additionally, Fig treats dots in \code{key} as nest level delimiters.
-Therefore, \code{fig$get("foo.bar")} is equivalent to \code{fig$get("foo")$bar}.
-This behavior can be disabled either by setting \code{options(fig.split = FALSE)} or by providing \code{split = FALSE} argument.
-}
-
 \subsection{Returns}{
 A value associated with provided \code{key}.
 }
@@ -321,9 +279,8 @@ fig$get("foo")
 fig$store("bar", list(baz = 2))
 fig$get("bar.baz")
 
-fig$store("bar.baz", 3, split = FALSE)
-fig$get("bar.baz") # == 2
-fig$get("bar.baz", split = FALSE) # == 3
+fig$configure(split_on = "")
+fig$get("bar.baz") # == NULL
 }
 \if{html}{\out{</div>}}
 
@@ -349,6 +306,16 @@ Retrieve Any Number of Stored Values
 \subsection{Returns}{
 An unnamed list of values associated with keys provided in \code{...}.
 }
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{fig <- Fig$new()
+fig$store_many(foo =  1, bar = 2, baz = 3)
+fig$get_many("foo", "bar")
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_all"></a>}}
@@ -362,6 +329,16 @@ Retrieve All Stored Values
 \subsection{Returns}{
 An unnamed list of all stored values.
 }
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{fig <- Fig$new()
+fig$store_many(foo =  1, bar = 2, baz = 3)
+fig$get_all()
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-store"></a>}}
@@ -381,11 +358,6 @@ Store a Value
 }
 \if{html}{\out{</div>}}
 }
-\subsection{Details}{
-Fig treats dots in \code{key} as nest level delimiters. Therefore,
-\code{fig$store("foo.bar", 1)} is equivalent to \verb{fig$store("foo", list(bar = 1)}. This behavior can be disabled either by setting \code{options(fig.split = FALSE)} or by providing \code{split = FALSE} argument.
-}
-
 \subsection{Returns}{
 Reference to self. Other methods can be chained after this one.
 }
@@ -394,7 +366,7 @@ Reference to self. Other methods can be chained after this one.
 \preformatted{fig <- Fig$new()
 fig$store("foo", 1)
 fig$store("bar", 123)$store("baz", list(1, 2, 3))
-fig$store("x.y", "a", FALSE)
+fig$store("x.y", "a")
 }
 \if{html}{\out{</div>}}
 
@@ -422,9 +394,8 @@ Reference to self. Other methods can be chained after this one.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{fig <- fig$New()
-fig$store_list(list(foo = 1, bar = 2))
-fig$store_list(list(foo = 123, baz = "abc"), split = TRUE)
+\preformatted{fig <- Fig$new()
+fig$store_list(list(foo = 123, bar = "abc"))
 }
 \if{html}{\out{</div>}}
 
@@ -455,8 +426,8 @@ Reference to self. Other methods can be chained after this one.
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{fig <- Fig$new()
 fig$store_many("foo" = 1, "bar" = 2)
-fig$store_many("foo.bar.baz" = 1, .split = TRUE)
-fig$store_many("foo" = "a", "baz" = 123, .split = FALSE)
+fig$store_many("foo.bar.baz" = 1)
+fig$store_many("foo" = "a", "baz" = 123)
 }
 \if{html}{\out{</div>}}
 
