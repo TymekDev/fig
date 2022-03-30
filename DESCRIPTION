@@ -7,8 +7,8 @@ Authors@R:
   )
 Description: Work with configs with a source precedence. Either create own R6
   instance or work with convenient functions at a package level.
-URL: https://github.com/tmakowski/fig
-BugReports: https://github.com/tmakowski/fig/issues
+URL: https://github.com/TymekDev/fig
+BugReports: https://github.com/TymekDev/fig/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
