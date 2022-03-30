@@ -20,6 +20,7 @@ Fig <- R6::R6Class( # nolint
     #' fig <- Fig$new(env_prefix = "RCONNECT_")
     initialize = function(env_prefix = "") {
       self$configure(env_prefix = env_prefix)
+      private$storage <- new.env()
     },
 
     #' @description Configure a Fig Instance
@@ -190,7 +191,7 @@ Fig <- R6::R6Class( # nolint
   ),
   private = list(
     add_env_prefix = NULL,
-    storage = new.env(),
+    storage = NULL,
     insert_value = function(key, value) {
       keys <- strsplit(key, ".", TRUE)[[1]]
       n_keys <- length(keys)
