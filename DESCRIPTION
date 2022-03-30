@@ -1,11 +1,12 @@
 Package: fig
-Title: A config package without a con
+Title: A Config Package with No "Con"
 Version: 0.0.1
 Authors@R:
   c(
     person("Tymoteusz", "Makowski", role = c("cre", "aut"), email = "t@makowski.sh")
   )
-Description: TODO
+Description: Work with configs with a source precedence. Either create own R6
+  instance or work with convenient functions at a package level.
 URL: https://github.com/tmakowski/fig
 BugReports: https://github.com/tmakowski/fig/issues
 License: MIT + file LICENSE
