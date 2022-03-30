@@ -140,7 +140,13 @@ section. Providing an empty string disables this behavior.}
 \if{html}{\out{</div>}}
 }
 \subsection{Details}{
-TODO
+Fig treats character provided in \code{split_on} as key nest level
+delimiter. Therefore, \code{split_on} set to \code{"."} (default value)
+\code{fig$get("foo.bar")} is equivalent to \code{fig$get("foo")$bar}. Similarly
+fig$set("foo.bar", 1) is equivalent to \code{fig$set("foo", list(bar = 1))}.
+This behavior can be disabled either by passing an empty string either to
+\code{new()} during \code{Fig} instance creation or to \code{configure()} function to
+modify an existing instance.
 }
 
 \subsection{Returns}{
@@ -267,6 +273,19 @@ Retrieve a Stored Value
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Details}{
+This function returns values based on a following priority
+(highest to lowest). If value is not found, then it looks up next level
+in the precedence.
+\enumerate{
+\item System environment variable (case sensitive)
+\item Value manually set
+}
+
+For system environment lookup dots are replaced by underscores, e.g.
+\code{fig$get("foo.bar")} will look up \strong{foo_bar}.
+}
+
 \subsection{Returns}{
 A value associated with provided \code{key}.
 }
@@ -303,6 +322,10 @@ Retrieve Any Number of Stored Values
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Details}{
+See \code{get()} Details section.
+}
+
 \subsection{Returns}{
 An unnamed list of values associated with keys provided in \code{...}.
 }
@@ -324,6 +347,10 @@ fig$get_many("foo", "bar")
 Retrieve All Stored Values
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Fig$get_all()}\if{html}{\out{</div>}}
+}
+
+\subsection{Details}{
+See \code{get()} Details section.
 }
 
 \subsection{Returns}{

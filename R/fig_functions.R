@@ -48,6 +48,14 @@ fig_delete_all <- function() {
 #' @title Retrieve Stored Values
 #' @description These functions allow retrieving values stored in the global fig
 #' instance.
+#' @details These functions return values based on a following priority
+#' (highest to lowest). If value is not found, then it looks up next level
+#' in the precedence.
+#' 1. System environment variable (case sensitive)
+#' 1. Value manually set
+#'
+#' For system environment lookup dots are replaced by underscores, e.g.
+#' `fig_get("foo.bar")` will look up __foo_bar__.
 #' @param key A key to retrieve a value for.
 #' @return A value associated with provided `key`.
 #' @examples

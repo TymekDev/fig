@@ -12,7 +12,13 @@ Fig <- R6::R6Class( # nolint
   classname = "Fig",
   public = list(
     #' @description Create a New Fig Instance
-    #' @details TODO
+    #' @details Fig treats character provided in `split_on` as key nest level
+    #' delimiter. Therefore, `split_on` set to `"."` (default value)
+    #' `fig$get("foo.bar")` is equivalent to `fig$get("foo")$bar`. Similarly
+    #' fig$set("foo.bar", 1) is equivalent to `fig$set("foo", list(bar = 1))`.
+    #' This behavior can be disabled either by passing an empty string either to
+    #' `new()` during `Fig` instance creation or to `configure()` function to
+    #' modify an existing instance.
     #' @param env_prefix (character) A prefix to be prepended to a key before
     #' system environment lookup.
     #' @param split_on (character) A value to split keys on. See Details
@@ -86,6 +92,14 @@ Fig <- R6::R6Class( # nolint
     },
 
     #' @description Retrieve a Stored Value
+    #' @details This function returns values based on a following priority
+    #' (highest to lowest). If value is not found, then it looks up next level
+    #' in the precedence.
+    #' 1. System environment variable (case sensitive)
+    #' 1. Value manually set
+    #'
+    #' For system environment lookup dots are replaced by underscores, e.g.
+    #' `fig$get("foo.bar")` will look up __foo_bar__.
     #' @param key A key to retrieve a value for.
     #' @return A value associated with provided `key`.
     #' @examples
@@ -114,6 +128,7 @@ Fig <- R6::R6Class( # nolint
     },
 
     #' @description Retrieve Any Number of Stored Values
+    #' @details See `get()` Details section.
     #' @param ... Keys to retrieve values for.
     #' @return An unnamed list of values associated with keys provided in `...`.
     #' @examples
@@ -125,6 +140,7 @@ Fig <- R6::R6Class( # nolint
     },
 
     #' @description Retrieve All Stored Values
+    #' @details See `get()` Details section.
     #' @return An unnamed list of all stored values.
     #' @examples
     #' fig <- Fig$new()
