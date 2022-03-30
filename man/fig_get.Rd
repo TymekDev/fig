@@ -28,6 +28,18 @@ An unnamed list of all stored values.
 These functions allow retrieving values stored in the global fig
 instance.
 }
+\details{
+These functions return values based on a following priority
+(highest to lowest). If value is not found, then it looks up next level
+in the precedence.
+\enumerate{
+\item System environment variable (case sensitive)
+\item Value manually set
+}
+
+For system environment lookup dots are replaced by underscores, e.g.
+\code{fig_get("foo.bar")} will look up \strong{foo_bar}.
+}
 \examples{
 fig_store("foo", 1)
 fig_get("foo")
