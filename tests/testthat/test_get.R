@@ -34,22 +34,6 @@ test_that("get environment lookup works with YAML key notation", {
   expect_equal(fig$get("foo.bar"), 1)
 })
 
-test_that("get split argument works", {
-  fig <- Fig$new()
-  fig$store("foo", list(bar = 1))
-  fig$store("foo.bar", 2, FALSE)
-  expect_equal(fig$get("foo.bar"), 1)
-  expect_equal(fig$get("foo.bar", FALSE), 2)
-})
-
-test_that("fig.split option works", {
-  fig <- Fig$new()
-  fig$store("foo", list(bar = 1))
-  fig$store("foo.bar", 2, FALSE)
-  expect_equal(fig$get("foo.bar"), 1)
-  with_options(list(fig.split = FALSE), expect_equal(fig$get("foo.bar"), 2))
-})
-
 test_that("fig_get shares get arguments", {
   expect_equal(formalArgs(fig_get), formalArgs(Fig$new()$get))
 })

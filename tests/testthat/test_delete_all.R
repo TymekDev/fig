@@ -1,8 +1,8 @@
 test_that("delete_all works", {
   fig <- Fig$new()
-  old_items <- fig$.__enclos_env__$private$items
+  old_items <- fig$.__enclos_env__$private$storage
   fig$delete_all()
-  expect_false(identical(fig$.__enclos_env__$private, old_items))
+  expect_false(identical(fig$.__enclos_env__$private$storage, old_items))
 })
 
 test_that("fig_delete_all shares delete_all arguments", {

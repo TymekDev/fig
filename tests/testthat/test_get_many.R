@@ -1,7 +1,8 @@
 test_that("get_many works", {
+  fig <- Fig$new()
   env <- new.env()
   l <- list()
-  fig_store_many(foo = 1, bar = env, baz = l)
+  fig$store_many(foo = 1, bar = env, baz = l)
   expect_equal(fig$get_many("foo", "bar", "baz"), list(1, env, l))
 })
 
