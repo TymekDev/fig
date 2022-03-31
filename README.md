@@ -10,11 +10,9 @@
 
 
 ## Installation
-<!-- TODO:
 ```r
 install.packages("fig")
 ```
--->
 
 To install latest available version from GitHub use remotes package:
 ```r
