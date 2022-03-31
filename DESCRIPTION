@@ -3,7 +3,7 @@ Title: A Config Package with No "Con"
 Version: 1.0.0
 Authors@R:
   c(
-    person("Tymoteusz", "Makowski", role = c("cre", "aut"), email = "t@makowski.sh")
+    person("Tymoteusz", "Makowski", role = c("cre", "aut"), email = "makowski.tymoteusz@gmail.com")
   )
 Description: Work with configs with a source precedence. Either create own R6
   instance or work with convenient functions at a package level.
