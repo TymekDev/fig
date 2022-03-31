@@ -97,7 +97,7 @@ fig_get("foo") # == NULL
 - System environment lookup is case sensitive.
 
 ### Environment Variable Prefix
-This feture goes in pair with precedence. fig can be configured with
+This feature goes in pair with precedence. fig can be configured with
 `env_prefix` argument (default: `""`). It can be provided via `fig_configure()`
 (or `configure()` method) or during `Fig` instance creation.
 
@@ -113,7 +113,7 @@ withr::with_envvar(list(RCONNECT_SERVER = "example.com", {
 
 ### Key Splitting
 > :information_source: _This feature is useful if you want interact
-> (dynamically) with a nested config without a hassle.
+> (dynamically) with a nested config without a hassle._
 
 fig can be configured with `split_on` argument (default: `"."`). It can be
 provided via `fig_configure()` (or `configure()` method) or during `Fig`
