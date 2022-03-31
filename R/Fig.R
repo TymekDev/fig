@@ -7,6 +7,7 @@
 #' creation optional, and makes the package itself mimic being a class instance.
 #' Those functions are wrappers on an internal `Fig` object.
 #'
+#' @import R6
 #' @export
 Fig <- R6::R6Class( # nolint
   classname = "Fig",
