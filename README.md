@@ -159,7 +159,7 @@ fig_store_list(config::get())
 fig_get("foo") # == 123
 
 withr::with_envvar(list(foo = "xyz"), {
-  fig_get("foo")) # == "xyz"
+  fig_get("foo") # == "xyz"
 })
 ```
 
