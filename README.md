@@ -73,14 +73,14 @@ fig_get_many("foo", "bar") # == list(123, 456)
 
 # Environment variable value gets picked over a stored value
 withr::with_envvar(list(foo = "xyz"), {
-  fig_get_many("foo", "bar")) # == list("xyz", 456)
+  fig_get_many("foo", "bar") # == list("xyz", 456)
 })
 
 fig_delete("foo")
 
 # Environment variable value gets picked over a missing stored value
 withr::with_envvar(list(foo = "xyz"), {
-  fig_get("foo")) # == "xyz"
+  fig_get("foo") # == "xyz"
 })
 
 fig_get("foo") # == NULL
