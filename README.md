@@ -104,7 +104,7 @@ environment lookup.
 
 ```r
 fig <- Fig$new(env_prefix = "RCONNECT_")
-withr::with_envvar(list(RCONNECT_SERVER = "example.com", {
+withr::with_envvar(list(RCONNECT_SERVER = "example.com"), {
   fig$get("SERVER") # == "example.com"
 })
 ```
